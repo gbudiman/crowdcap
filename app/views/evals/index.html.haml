@@ -1,0 +1,18 @@
+%div{class: 'container my-content'}
+  %div{class: 'col-xs-12 image-viewport', id: 'image-query'}
+    %img{id: 'image-query-img', class: 'image-img center-block'}
+  %div{class: 'col-xs-12 image-viewport', id: 'image-target'}
+    %img{id: 'image-target-img', class: 'image-img center-block'}
+  %div{class: 'col-xs-12 eval-response'}
+    %div{class: 'row'}
+      %div{class: 'col-xs-6'}
+        %button{type: 'button', class: 'btn btn-danger btn-block btn-response btn-lg', id: 'response-bad'} Bad
+      %div{class: 'col-xs-6'}
+        %button{type: 'button', class: 'btn btn-success btn-block btn-response btn-lg', id: 'response-good'} Good
+
+= stylesheet_link_tag 'style'
+= javascript_include_tag 'layout/layout'
+
+:javascript
+  layout.attach();
+  evals.fetch();
