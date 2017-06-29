@@ -40,6 +40,8 @@ ActiveRecord::Schema.define(version: 20170628023941) do
     t.string   "name",       limit: 255,                                                                             null: false
     t.datetime "created_at",             precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
     t.datetime "updated_at",             precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
+    t.index ["name"], name: "picture_name_index", using: :btree
+    t.index ["name"], name: "picture_unique_name", unique: true, using: :btree
   end
 
   create_table "potentials", id: :bigserial, force: :cascade do |t|

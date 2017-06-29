@@ -9,8 +9,8 @@ var evals = function() {
       url: '/evals/fetch'
     }).done(function(res) {
       if (res.response == 'success') {
-        fetch_image('query', 'eh');
-        fetch_image('target', 'eh');
+        fetch_image('query', res.pquery);
+        fetch_image('target', res.ptarget);
         layout.enable_response(true);
         potential_id = res.id
       }
@@ -18,7 +18,7 @@ var evals = function() {
   }
 
   var fetch_image = function(type, _name) {
-    var name = '/assets/9311553183_0def7e8f01.jpg'
+    var name = '/assets/' + _name;
     switch(type) {
       case 'query': $('#image-query-img').attr('src', name); break;
       case 'target': $('#image-target-img').attr('src', name); break;
