@@ -1,0 +1,14 @@
+%div{class: 'container'}
+  %div{class: 'panel-group', id: 'img-json', role: 'tablist'}
+    %div{class: 'panel panel-primary'}
+      %div{class: 'panel-heading', role: 'tab', id: 'heading-img-json'}
+        %h4{class: 'panel-title'}
+          %a{role: 'button', 'data-toggle': 'collapse', 'data-parent': 'img-json', href: '#content-img-json'}
+            JSON Data
+      %div{id: 'content-img-json', class: 'panel-collapse collapse in', role: 'tabpanel'}
+        %code
+          = @images.to_json
+          Hello
+%div{class: 'container'}
+  - @images.each do |_path|
+    %img{src: "/assets/#{_path}", class: 'img-cell'}
