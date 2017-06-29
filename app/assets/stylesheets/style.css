@@ -19,3 +19,8 @@
   max-width: 160px;
   max-height: 160px;
 }
+
+#content-img-json {
+  max-height: 320px;
+  overflow-y: scroll;
+}

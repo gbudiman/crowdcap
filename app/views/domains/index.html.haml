@@ -4,11 +4,13 @@
       %div{class: 'panel-heading', role: 'tab', id: 'heading-img-json'}
         %h4{class: 'panel-title'}
           %a{role: 'button', 'data-toggle': 'collapse', 'data-parent': 'img-json', href: '#content-img-json'}
-            JSON Data
+            Image Paths
       %div{id: 'content-img-json', class: 'panel-collapse collapse in', role: 'tabpanel'}
         %code
-          = @images.to_json
-          Hello
+          - @images.each do |_path|
+            = "#{_path}\n"
 %div{class: 'container'}
   - @images.each do |_path|
     %img{src: "/assets/#{_path}", class: 'img-cell'}
+
+= stylesheet_link_tag 'style'
