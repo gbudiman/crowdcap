@@ -4,11 +4,13 @@
       %div{class: 'panel-heading', role: 'tab', id: 'heading-img-json'}
         %h4{class: 'panel-title'}
           %a{role: 'button', 'data-toggle': 'collapse', 'data-parent': 'img-json', href: '#content-img-json'}
-            Image Paths
+            Image Paths (
+            = @images.length
+            images
+            \)
       %div{id: 'content-img-json', class: 'panel-collapse collapse in', role: 'tabpanel'}
-        %code
-          - @images.each do |_path|
-            = "#{_path}\n"
+        %pre
+          = @images.join("\n")
 %div{class: 'container'}
   - @images.each do |_path|
     %img{src: "/assets/#{_path}", class: 'img-cell'}
