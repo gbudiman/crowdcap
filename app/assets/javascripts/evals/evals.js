@@ -1,5 +1,4 @@
 var evals = function() {
-  var potential_id = null;
   var query_ready = false;
   var target_ready = false;
   var buffer = new Array();
@@ -7,6 +6,8 @@ var evals = function() {
   var buffer_end = 0;
   var batch_fetch = 8;
   var buffer_minimum = 4;
+  var potential_h = {};
+  var objects = {};
 
   var attach = function() {
     $('#eval-begin').on('click', begin_test);
@@ -16,22 +17,33 @@ var evals = function() {
     $('#image-target-img').load(function() {
       set_ready('target');
     })
-    buffer_fetch();
+    buffer_fetch(false);
+    layout.enable_response(true);
   }
 
-  var buffer_fetch = function() {
+  var buffer_fetch = function(_pop) {
     var diff = buffer_end - buffer_position;
     if (diff < buffer_minimum) {
       var fetch_amount = batch_fetch - diff;
 
       console.log('Buffer amount = ' + diff + ', fetching ' + fetch_amount + ' more');
 
-      for (var i = 0; i < diff; i++) {
+      for (var i = 0; i < fetch_amount; i++) {
         fetch_in_background(buffer_end + i);
       }
-    } else {
-      console.log('Buffer amount = ' + diff);
     }
+    
+    if (_pop) {
+      console.log('Buffer position = ' + buffer_position + '/' + buffer_end);
+      pop_and_display_buffer();
+    }
+  }
+
+  var pop_and_display_buffer = function() {
+    $('#image-query').empty().append($('#query_' + buffer_position).show());
+    $('#image-target').empty().append($('#target_' + buffer_position).show());
+    update_objects(objects[buffer_position]);
+    layout.recalculate_layout();
   }
 
   var evaluate_readiness = function() {
@@ -58,6 +70,7 @@ var evals = function() {
   }
 
   var fetch_in_background = function(id) {
+    console.log('fetching for buffer position ' + id);
     $.ajax({
       method: 'GET',
       url: '/evals/fetch'
@@ -65,6 +78,9 @@ var evals = function() {
       if (res.response == 'success') {
         create_hidden_div('query', res.pquery, id);
         create_hidden_div('target', res.ptarget, id);
+        potential_h[id] = res.id;
+        objects[id] = res.objects;
+        buffer_end++;
       }
     })
   }
@@ -82,10 +98,13 @@ var evals = function() {
         break;
       case 'target': 
         element_name = 'image-target-img';
-        target_id = 'target_' + _buffer_id; break;
+        buffer_id = 'target_' + _buffer_id; break;
     }
 
-    raw = '<img name="' + element_name + '" class="image-img center-block image-infancy" src="' + name + '">';
+    raw = '<img name="' + element_name + '" '
+             + 'id="' + buffer_id + '" '
+             + 'class="image-img center-block image-infancy" '
+             + 'src="' + name + '">';
     $('body').append(raw);
   }
 
@@ -98,7 +117,9 @@ var evals = function() {
   }
 
   var post = function(val) {
-    layout.enable_response(false);
+    //layout.enable_response(false);
+    var potential_id = potential_h[buffer_position];
+    buffer_position++;
     $.ajax({
       method: 'POST',
       url: '/evals/post',
@@ -108,7 +129,8 @@ var evals = function() {
       }
     }).done(function(res) {
       if (res.response == 'success') {
-        fetch();
+        //fetch();
+        buffer_fetch(true);
       }
     })
   }
@@ -138,6 +160,7 @@ var evals = function() {
       $('#eval-intro').addClass('animated slideOutUp');
       $('#eval-interface').show().addClass('animated slideInUp');
       layout.recalculate_layout();
+      buffer_fetch(true);
     })
     
   }

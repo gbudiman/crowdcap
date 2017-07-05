@@ -7,6 +7,6 @@ class EvalsController < ApplicationController
   end
 
   def post
-    render json: Potential.submit_eval(id: params[:id], val: params[:val])
+    render json: Potential.submit_eval(id: params[:id].to_i, val: params[:val])
   end
 end

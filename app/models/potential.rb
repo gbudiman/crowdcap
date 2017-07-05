@@ -32,6 +32,12 @@ class Potential < ApplicationRecord
   end
 
   def self.submit_eval(id:, val:)
+    pot = Potential.find(id)
+    pot.increment :count_evaluated
+    if val == 'good'
+      pot.increment :count_correct
+    end
+
     return {
       response: 'success'
     }
