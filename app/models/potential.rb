@@ -37,6 +37,7 @@ class Potential < ApplicationRecord
     if val == 'good'
       pot.increment :count_correct
     end
+    pot.save
 
     return {
       response: 'success'
