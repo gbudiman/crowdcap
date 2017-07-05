@@ -57,6 +57,7 @@ var evals = function() {
     }, 500, function() {
       $('#eval-intro').addClass('animated slideOutUp');
       $('#eval-interface').show().addClass('animated slideInUp');
+      layout.recalculate_layout();
     })
     
   }

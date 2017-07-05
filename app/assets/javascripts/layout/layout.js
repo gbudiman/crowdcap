@@ -32,7 +32,8 @@ var layout = function() {
 
   return {
     attach: attach,
-    enable_response: enable_response
+    enable_response: enable_response,
+    recalculate_layout: recalculate_layout
   }
 }()
 
