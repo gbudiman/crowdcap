@@ -170,6 +170,7 @@ var evals = function() {
     }, 500, function() {
       $('#eval-intro').addClass('animated slideOutUp');
       $('#eval-interface').show().addClass('animated slideInUp');
+      $('#eval-intro').remove();
       layout.recalculate_layout();
       buffer_fetch(true);
     })
