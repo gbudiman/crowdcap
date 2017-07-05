@@ -1,9 +1,23 @@
 var evals = function() {
   var potential_id = null;
+  var query_ready = false;
+  var target_ready = false;
 
   var attach = function() {
     $('#eval-begin').on('click', begin_test);
+    $('#image-query-img').load(function() {
+      set_ready('query');
+    })
+    $('#image-target-img').load(function() {
+      set_ready('target');
+    })
     fetch();
+  }
+
+  var evaluate_readiness = function() {
+    if (query_ready && target_ready) {
+      layout.enable_response(true);
+    }
   }
 
   var fetch = function() {
@@ -16,8 +30,8 @@ var evals = function() {
       if (res.response == 'success') {
         fetch_image('query', res.pquery);
         fetch_image('target', res.ptarget);
+        reset_readiness();
         update_objects(res.objects);
-        layout.enable_response(true);
         potential_id = res.id
       }
     })
@@ -45,6 +59,20 @@ var evals = function() {
         fetch();
       }
     })
+  }
+
+  var set_ready = function(x) {
+    switch (x) {
+      case 'query': query_ready = true; break;
+      case 'target': target_ready = true; break;
+    }
+
+    evaluate_readiness();
+  }
+
+  var reset_readiness = function() {
+    query_ready = false;
+    target_ready = false;
   }
 
   var update_objects = function(arr) {
