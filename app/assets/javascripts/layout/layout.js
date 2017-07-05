@@ -18,7 +18,7 @@ var layout = function() {
   }
 
   var recalculate_layout = function() {
-    var height = $(window).height();
+    var height = $(window).height() - $('#detected-objects-container').outerHeight();
     var viewport_width = $('.image-viewport').width();
     var viewport_height = 0.4 * height;
     var response_height = 0.2 * height;

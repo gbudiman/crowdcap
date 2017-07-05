@@ -37,4 +37,9 @@
 #detected-objects-container {
   margin-top: 12px;
   margin-bottom: 0px;
+  padding: 8px;
+}
+
+#detected-objects {
+  font-style: italic;
 }
