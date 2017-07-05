@@ -40,8 +40,19 @@ var evals = function() {
   }
 
   var pop_and_display_buffer = function() {
-    $('#image-query').empty().append($('#query_' + buffer_position).show());
-    $('#image-target').empty().append($('#target_' + buffer_position).show());
+    var buffered_query = $('#query_' + buffer_position).css('opacity', 0).css('display', 'block');
+    var buffered_target = $('#target_' + buffer_position).css('opacity', 0).css('display', 'block');
+
+    $('#image-query').empty().append(buffered_query);
+    $('#image-target').empty().append(buffered_target);
+
+    buffered_query.animate({
+      opacity: 1.0
+    }, 250);
+
+    buffered_target.animate({
+      opacity: 1.0
+    }, 250);
     update_objects(objects[buffer_position]);
     layout.recalculate_layout();
   }
