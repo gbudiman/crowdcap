@@ -26,6 +26,9 @@ var evals = function() {
 
       console.log('Buffer amount = ' + diff + ', fetching ' + fetch_amount + ' more');
 
+      for (var i = 0; i < diff; i++) {
+        fetch_in_background(buffer_end + i);
+      }
     } else {
       console.log('Buffer amount = ' + diff);
     }
@@ -54,11 +57,43 @@ var evals = function() {
     })
   }
 
+  var fetch_in_background = function(id) {
+    $.ajax({
+      method: 'GET',
+      url: '/evals/fetch'
+    }).done(function(res) {
+      if (res.response == 'success') {
+        create_hidden_div('query', res.pquery, id);
+        create_hidden_div('target', res.ptarget, id);
+      }
+    })
+  }
+
+  var create_hidden_div = function(type, _name, _buffer_id) {
+    var name = '/assets/' + _name;
+    var raw = '';
+    var element_name = '';
+    var buffer_id = '';
+
+    switch(type) {
+      case 'query': 
+        element_name = 'image-query-img';
+        buffer_id = 'query_' + _buffer_id; 
+        break;
+      case 'target': 
+        element_name = 'image-target-img';
+        target_id = 'target_' + _buffer_id; break;
+    }
+
+    raw = '<img name="' + element_name + '" class="image-img center-block image-infancy" src="' + name + '">';
+    $('body').append(raw);
+  }
+
   var fetch_image = function(type, _name) {
     var name = '/assets/' + _name;
     switch(type) {
-      case 'query': $('#image-query-img').attr('src', name); break;
-      case 'target': $('#image-target-img').attr('src', name); break;
+      case 'query': $('[name="image-query-img"]').attr('src', name); break;
+      case 'target': $('[name=image-target-img"]').attr('src', name); break;
     }
   }
 

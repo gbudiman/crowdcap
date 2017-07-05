@@ -20,6 +20,10 @@
   //max-height: 160px;
 }
 
+.image-infancy {
+  display: none;
+}
+
 #content-img-json {
   max-height: 320px;
   overflow-y: scroll;
