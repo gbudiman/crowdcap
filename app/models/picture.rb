@@ -34,9 +34,9 @@ class Picture < ApplicationRecord
     end
   end
 
-  def self.measure_detection_accuracy
+  def self.measure_detection_accuracy valtrain:
     dbjson = JSON.parse(File.read('public/detected_objects.json'))
-    gtjson = JSON.parse(File.read('public/objects_val.json'))
+    gtjson = JSON.parse(File.read("public/objects_#{valtrain}.json"))
     extra_left = {}
     extra_right = {}
     translations = {
@@ -46,6 +46,7 @@ class Picture < ApplicationRecord
       'potted plant' => 'pottedplant',
       'tv' => 'tvmonitor',
     }
+    classes = {}
     metrics = {
       fully_accurate: 0,
       extra_data: 0,
@@ -72,11 +73,37 @@ class Picture < ApplicationRecord
         list_left.to_a.each do |l|
           extra_left[l] ||= 0
           extra_left[l] = extra_left[l] + 1
+
+          classes[l] ||= {
+            left: 0,
+            right: 0,
+            center: 0
+          }
+
+          classes[l][:left] = classes[l][:left] + 1
         end
 
         list_right.to_a.each do |r|
           extra_right[r] ||= 0
           extra_right[r] = extra_right[r] + 1
+
+          classes[r] ||= {
+            left: 0,
+            right: 0,
+            center: 0
+          }
+
+          classes[r][:right] = classes[r][:right] + 1
+        end
+
+        intersect.to_a.each do |c|
+          classes[c] ||= {
+            left: 0,
+            right: 0,
+            center: 0
+          }
+
+          classes[c][:center] = classes[c][:center] + 1
         end
 
         if list_left.length == 0 and list_right.length == 0
@@ -97,5 +124,19 @@ class Picture < ApplicationRecord
     ap extra_left.sort.to_h
     ap extra_right.sort.to_h
     ap metrics
+
+    puts "%24s | %6s | %6s | %6s | %6s" % ['Classes', 'Left', 'Center', 'Right', 'IoU']
+    60.times { print '-' }
+    puts
+    Hash[classes.sort_by{ |k, v| v[:center].to_f / (v[:left] + v[:center] + v[:right]).to_f}].each do |key, value|
+      puts "%24s | %6d | %6d | %6d | %6.2f" %
+        [key,
+         value[:left],
+         value[:center],
+         value[:right],
+         value[:center].to_f / (value[:left] + value[:center] + value[:right]).to_f]
+    end
+
+    return nil
   end
 end

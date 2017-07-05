@@ -12,4 +12,6 @@ Rails.application.config.assets.paths << '/media/b10/gbudiman-coco/coco/images/v
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 Rails.application.config.assets.precompile += %w( style.css
+                                                  animate.css
+                                                  evals/*.js
                                                   layout/*.js )

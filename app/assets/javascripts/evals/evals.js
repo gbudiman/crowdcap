@@ -1,6 +1,11 @@
 var evals = function() {
   var potential_id = null;
 
+  var attach = function() {
+    $('#eval-begin').on('click', begin_test);
+    fetch();
+  }
+
   var fetch = function() {
     layout.enable_response(false);
 
@@ -11,6 +16,7 @@ var evals = function() {
       if (res.response == 'success') {
         fetch_image('query', res.pquery);
         fetch_image('target', res.ptarget);
+        update_objects(res.objects);
         layout.enable_response(true);
         potential_id = res.id
       }
@@ -41,7 +47,22 @@ var evals = function() {
     })
   }
 
+  var update_objects = function(arr) {
+    $('#detected-objects').text(arr.join(', '))
+  }
+
+  var begin_test = function() {
+    $('#eval-intro').animate({
+      opacity: 0
+    }, 500, function() {
+      $('#eval-intro').addClass('animated slideOutUp');
+      $('#eval-interface').show().addClass('animated slideInUp');
+    })
+    
+  }
+
   return {
+    attach: attach,
     fetch: fetch,
     post: post
   }

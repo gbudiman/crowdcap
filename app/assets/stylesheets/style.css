@@ -24,3 +24,12 @@
   max-height: 320px;
   overflow-y: scroll;
 }
+
+#eval-interface {
+  display: none;
+}
+
+#detected-objects-container {
+  margin-top: 12px;
+  margin-bottom: 0px;
+}
