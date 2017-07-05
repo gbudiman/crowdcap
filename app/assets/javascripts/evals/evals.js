@@ -10,6 +10,7 @@ var evals = function() {
   var objects = {};
 
   var attach = function() {
+    $('#eval-begin').prop('disabled', true).text('Prefetching images...');
     $('#eval-begin').on('click', begin_test);
     $('#image-query-img').load(function() {
       set_ready('query');
@@ -92,6 +93,10 @@ var evals = function() {
         potential_h[id] = res.id;
         objects[id] = res.objects;
         buffer_end++;
+
+        if (buffer_end >= batch_fetch) {
+          $('#eval-begin').prop('disabled', false).text('Begin');
+        }
       }
     })
   }
@@ -180,6 +185,8 @@ var evals = function() {
   return {
     attach: attach,
     fetch: fetch,
-    post: post
+    post: post,
+    get_potentials: function() { return potential_h; },
+    get_objects: function() { return objects; }
   }
 }()
