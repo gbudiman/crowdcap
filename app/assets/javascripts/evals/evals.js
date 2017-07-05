@@ -2,6 +2,11 @@ var evals = function() {
   var potential_id = null;
   var query_ready = false;
   var target_ready = false;
+  var buffer = new Array();
+  var buffer_position = 0;
+  var buffer_end = 0;
+  var batch_fetch = 8;
+  var buffer_minimum = 4;
 
   var attach = function() {
     $('#eval-begin').on('click', begin_test);
@@ -11,7 +16,19 @@ var evals = function() {
     $('#image-target-img').load(function() {
       set_ready('target');
     })
-    fetch();
+    buffer_fetch();
+  }
+
+  var buffer_fetch = function() {
+    var diff = buffer_end - buffer_position;
+    if (diff < buffer_minimum) {
+      var fetch_amount = batch_fetch - diff;
+
+      console.log('Buffer amount = ' + diff + ', fetching ' + fetch_amount + ' more');
+
+    } else {
+      console.log('Buffer amount = ' + diff);
+    }
   }
 
   var evaluate_readiness = function() {
