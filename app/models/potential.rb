@@ -27,6 +27,7 @@ class Potential < ApplicationRecord
       id: first_pot.pot_id,
       pquery: first_pot.query_name,
       ptarget: first_pot.target_name,
+      target_id: first_pot.target_picture_id,
       objects: objects_in_q
     }
   end

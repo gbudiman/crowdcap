@@ -7,6 +7,7 @@ var evals = function() {
   var batch_fetch = 8;
   var buffer_minimum = 4;
   var potential_h = {};
+  var target_caption = {};
   var objects = {};
 
   var attach = function() {
@@ -55,6 +56,7 @@ var evals = function() {
       opacity: 1.0
     }, 250);
     update_objects(objects[buffer_position]);
+    update_caption(target_caption[buffer_position]);
     layout.recalculate_layout();
   }
 
@@ -92,6 +94,7 @@ var evals = function() {
         create_hidden_div('target', res.ptarget, id);
         potential_h[id] = res.id;
         objects[id] = res.objects;
+        target_caption[id] = res.target_id;
         buffer_end++;
 
         if (buffer_end >= batch_fetch) {
@@ -167,6 +170,16 @@ var evals = function() {
 
   var update_objects = function(arr) {
     $('#detected-objects').text(arr.join(', '))
+  }
+
+  var update_caption = function(id) {
+    $('#generated-sentence').text('... Generating sentence ...');
+    $.ajax({
+      url: '/caption/' + id,
+      method: 'GET'
+    }).done(function(res) {
+      $('#generated-sentence').text(res);
+    })
   }
 
   var begin_test = function() {

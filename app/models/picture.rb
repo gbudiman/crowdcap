@@ -1,6 +1,11 @@
 class Picture < ApplicationRecord
   has_many :picture_contents
   has_many :contents, through: :picture_contents
+  has_many :captions
+
+  def self.generate_caption id
+    return Picture.find(id).captions.pluck(:caption).sample
+  end
 
   def self.fetch_by_class type:, classes:
     type_pattern = type == 'val' ? 'COCO_val2014%' : 'COCO_train2014%'
