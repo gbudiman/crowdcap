@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170628023941) do
+ActiveRecord::Schema.define(version: 20170712001421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "captions", id: :bigserial, force: :cascade do |t|
+    t.text     "caption",    null: false
+    t.bigint   "picture_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["picture_id"], name: "index_captions_on_picture_id", using: :btree
+  end
 
   create_table "contents", id: :bigserial, force: :cascade do |t|
     t.string   "title",      limit: 255,                                                                             null: false
@@ -34,14 +42,13 @@ ActiveRecord::Schema.define(version: 20170628023941) do
     t.bigint   "content_id",                                                                             null: false
     t.datetime "created_at", precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
     t.datetime "updated_at", precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
+    t.box      "coords"
   end
 
   create_table "pictures", id: :bigserial, force: :cascade do |t|
     t.string   "name",       limit: 255,                                                                             null: false
     t.datetime "created_at",             precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
     t.datetime "updated_at",             precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
-    t.index ["name"], name: "picture_name_index", using: :btree
-    t.index ["name"], name: "picture_unique_name", unique: true, using: :btree
   end
 
   create_table "potentials", id: :bigserial, force: :cascade do |t|
@@ -54,6 +61,7 @@ ActiveRecord::Schema.define(version: 20170628023941) do
     t.index ["query_id", "target_id"], name: "index_potentials_on_query_id_and_target_id", unique: true, using: :btree
   end
 
+  add_foreign_key "captions", "pictures"
   add_foreign_key "features", "pictures", name: "features_picture_id_foreign", on_update: :cascade, on_delete: :cascade
   add_foreign_key "picture_contents", "contents", name: "picture_contents_content_id_foreign", on_update: :cascade, on_delete: :cascade
   add_foreign_key "picture_contents", "pictures", name: "picture_contents_picture_id_foreign", on_update: :cascade, on_delete: :cascade
