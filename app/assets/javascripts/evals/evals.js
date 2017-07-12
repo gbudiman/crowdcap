@@ -174,11 +174,19 @@ var evals = function() {
 
   var update_caption = function(id) {
     $('#generated-sentence').text('... Generating sentence ...');
+
+    console.log('launching get with id ' + id);
     $.ajax({
       url: '/caption/' + id,
       method: 'GET'
     }).done(function(res) {
-      $('#generated-sentence').text(res);
+      if (res.success) {
+        $('#generated-sentence').text(res.sentence);
+      } else {
+        $('#generated-sentence').text('Error generating sentence');
+      }
+    }).fail(function() {
+      console.log('ERROR!');
     })
   }
 

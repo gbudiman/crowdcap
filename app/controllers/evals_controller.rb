@@ -11,6 +11,9 @@ class EvalsController < ApplicationController
   end
 
   def caption
-    render json: Picture.generate_caption(params[:id].to_i)
+    render json: {
+      success: true,
+      sentence: Picture.generate_caption(params[:id].to_i)
+    }
   end
 end
