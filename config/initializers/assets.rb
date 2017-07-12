@@ -8,6 +8,7 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.paths << '/Users/gbudiman/Documents/captioning/port/test_images'
 Rails.application.config.assets.paths << '/media/b10/gbudiman-coco/coco/images/train2014'
 Rails.application.config.assets.paths << '/media/b10/gbudiman-coco/coco/images/val2014'
+Rails.application.config.assets.paths << '/home/Users/gbudiman/sam/predictions'
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.

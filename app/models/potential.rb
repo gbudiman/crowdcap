@@ -17,11 +17,19 @@ class Potential < ApplicationRecord
                      ptarget.name AS target_name')
 
     first_pot = pot.first
-    objects_in_q = Set.new(Picture.find(first_pot.query_picture_id).contents.pluck(:title))
-    #objects_in_t = Set.new(Picture.find(first_pot.target_picture_id).contents.pluck(:title))
+    #objects_in_q = Set.new(Picture.find(first_pot.query_picture_id).contents.pluck(:title))
 
-    #ap objects_in_q
-    #ap objects_in_t
+    objects_in_q = {}
+
+    Picture.find(first_pot.query_picture_id)
+      .joins('INNER JOIN picture_contents AS pc ON picture.id = pc.picture_id')
+      .joins('INNER JOIN contents ON pc.content_id = contents.id')
+      .select('contents.title AS object_name',
+              'COUNT(*) AS object_count')
+      .group('contentx.title').each do |r|
+      objects_in_q[r.object_name] = r.object_count
+    end
+
     return {
       response: 'success',
       id: first_pot.pot_id,

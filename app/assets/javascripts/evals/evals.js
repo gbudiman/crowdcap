@@ -48,6 +48,10 @@ var evals = function() {
     $('#image-query').empty().append(buffered_query);
     $('#image-target').empty().append(buffered_target);
 
+    $('.image-viewport').find('img')
+      .mouseover(switch_to_saliency)
+      .mouseout(switch_to_image);
+
     buffered_query.animate({
       opacity: 1.0
     }, 250);
@@ -58,6 +62,18 @@ var evals = function() {
     update_objects(objects[buffer_position]);
     update_caption(target_caption[buffer_position]);
     layout.recalculate_layout();
+  }
+
+  var switch_to_saliency = function() {
+    var src = $(this).attr('src');
+
+    $(this).attr('src', src.replace('assets', 'sal'));
+  }
+
+  var switch_to_image = function() {
+    var src = $(this).attr('src');
+
+    $(this).attr('src', src.replace('sal', 'assets'));
   }
 
   var evaluate_readiness = function() {
@@ -168,7 +184,13 @@ var evals = function() {
     target_ready = false;
   }
 
-  var update_objects = function(arr) {
+  var update_objects = function(h) {
+    arr = new Array();
+
+    $.each(h, function(name, count) {
+      arr.push(name + ' (' + count + ')');
+    })
+    
     $('#detected-objects').text(arr.join(', '))
   }
 
