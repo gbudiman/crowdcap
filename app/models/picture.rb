@@ -7,17 +7,22 @@ class Picture < ApplicationRecord
     return Picture.find(id).captions.pluck(:caption).sample
   end
 
-  def self.fetch_by_class type:, classes:
+  def self.fetch_by_class type:, classes:, with_annotations: false
     type_pattern = type == 'val' ? 'COCO_val2014%' : 'COCO_train2014%'
 
-    return Picture
+    picture = Picture
       .joins(:picture_contents)
       .joins(:contents)
       .where('pictures.name LIKE :type_pattern', type_pattern: type_pattern)
       .where('contents.title IN (:classes)', classes: classes)
-      .distinct
-      .order('pictures.name')
-      .pluck('pictures.name')
+
+    if with_annotations
+      return picture.joins(:captions).as_json
+    else
+      return picture.distinct
+                    .order('pictures.name')
+                    .pluck('pictures.name')
+    end
   end
 
   def self.detected_objects

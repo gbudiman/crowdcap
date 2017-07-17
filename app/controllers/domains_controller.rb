@@ -6,4 +6,10 @@ class DomainsController < ApplicationController
 
     render 'index'
   end
+
+  def make_ground_truth
+    classes = params[:rest].split('/')
+    valtrain = params[:vt]
+    render json: Picture.fetch_by_class(type: valtrain, classes: classes, with_annotations: true)
+  end
 end

@@ -21,12 +21,12 @@ class Potential < ApplicationRecord
 
     objects_in_q = {}
 
-    Picture.find(first_pot.query_picture_id)
-      .joins('INNER JOIN picture_contents AS pc ON picture.id = pc.picture_id')
+    Picture.where(id: first_pot.query_picture_id)
+      .joins('INNER JOIN picture_contents AS pc ON pictures.id = pc.picture_id')
       .joins('INNER JOIN contents ON pc.content_id = contents.id')
       .select('contents.title AS object_name',
               'COUNT(*) AS object_count')
-      .group('contentx.title').each do |r|
+      .group('contents.title').each do |r|
       objects_in_q[r.object_name] = r.object_count
     end
 
