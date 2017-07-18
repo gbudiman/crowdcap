@@ -7,6 +7,28 @@ class Picture < ApplicationRecord
     return Picture.find(id).captions.pluck(:caption).sample
   end
 
+  def self.build_metadata
+    Picture.extract_json Rails.root.join('public', 'captions_val2014.json'), :val
+    Picture.extract_json Rails.root.join('public', 'captions_train2014.json'), :train
+  end
+
+  def self.extract_json io, type
+    ActiveRecord::Base.transaction do
+      old_logger = ActiveRecord::Base.logger
+      ActiveRecord::Base.logger = nil
+
+      JSON.parse(File.read(io))['images'].each do |s|
+        picture = Picture.find(name: s['file_name'])
+        picture.coco_internal_id = s['id']
+        picture.height = s['height']
+        picture.width = s['width']
+        picture.save
+      end
+
+      ActiveRecord::Base.logger = old_logger
+    end
+  end
+
   def self.domain_test
     k = fetch_by_class type: 'train',
                        classes: ['bicycle','car','traffic light','fire hydrant','motorcycle','stop sign','parking meter','bus','truck'],
@@ -26,7 +48,11 @@ class Picture < ApplicationRecord
       .joins(:picture_contents)
       .joins(:contents)
       .where('pictures.name LIKE :type_pattern', type_pattern: type_pattern)
-      .where('contents.title IN (:classes)', classes: classes)
+
+    if type == ['all']
+    else
+      picture.where('contents.title IN (:classes)', classes: classes)
+    end
 
     if with_annotations
       s = []
@@ -37,12 +63,14 @@ class Picture < ApplicationRecord
                 'captions.coco_internal_id AS coco_internal_id')
         .distinct
         .each do |r|
-        matches = /\d{12,12}/.match(r.picture_name)
+        matches = /(\d{12,12})/.match(r.picture_name)
         h = {
-          id: matches[1],
-          image_id: r.coco_internal_id,
+          image_id: matches[1].to_i,
+          id: r.coco_internal_id,
           caption: r.sentence
         }
+
+        s.push h
       end
 
       return s
