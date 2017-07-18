@@ -13,7 +13,9 @@ class Picture < ApplicationRecord
                        with_annotations: true
 
     File.open(Rails.root.join('public', 'domain_test.json'), 'w') do |f|
-      f.puts k.to_json
+      k.each do |picture_name, ids|
+        f.puts "#{picture_name} #{ids.join(', ')}"
+      end
     end
   end
 
@@ -27,15 +29,20 @@ class Picture < ApplicationRecord
       .where('contents.title IN (:classes)', classes: classes)
 
     if with_annotations
-      s = {}
+      s = []
 
       picture.joins(:captions)
         .select('pictures.name AS picture_name',
-                'captions.caption AS caption')
+                'captions.caption AS sentence',
+                'captions.coco_internal_id AS coco_internal_id')
         .distinct
         .each do |r|
-        s[r.picture_name] ||= Array.new
-        s[r.picture_name].push(r.caption)
+        matches = /\d{12,12}/.match(r.picture_name)
+        h = {
+          id: matches[1],
+          image_id: r.coco_internal_id,
+          caption: r.sentence
+        }
       end
 
       return s
