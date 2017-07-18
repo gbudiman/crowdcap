@@ -10,16 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170712001421) do
+ActiveRecord::Schema.define(version: 20170718003156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "captions", id: :bigserial, force: :cascade do |t|
-    t.text     "caption",    null: false
-    t.bigint   "picture_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.text     "caption",          null: false
+    t.bigint   "picture_id",       null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.bigint   "coco_internal_id"
     t.index ["picture_id"], name: "index_captions_on_picture_id", using: :btree
   end
 

@@ -21,9 +21,11 @@ class Caption < ApplicationRecord
 
       pretext = "COCO_#{type == :val ? 'val' : 'train'}2014_"
       JSON.parse(File.read(io))['annotations'].each do |s|
+        internal_id = s['id'].to_i
         coco_id = pretext + sprintf("%012d.jpg", s['image_id'])
         Caption.create(picture_id: h[coco_id],
-                       caption: s['caption'])
+                       caption: s['caption'],
+                       coco_internal_id: internal_id)
       end
 
       ActiveRecord::Base.logger = old_logger

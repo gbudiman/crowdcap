@@ -7,6 +7,16 @@ class Picture < ApplicationRecord
     return Picture.find(id).captions.pluck(:caption).sample
   end
 
+  def self.domain_test
+    k = fetch_by_class type: 'train',
+                       classes: ['bicycle','car','traffic light','fire hydrant','motorcycle','stop sign','parking meter','bus','truck'],
+                       with_annotations: true
+
+    File.open(Rails.root.join('public', 'domain_test.json'), 'w') do |f|
+      f.puts k.to_json
+    end
+  end
+
   def self.fetch_by_class type:, classes:, with_annotations: false
     type_pattern = type == 'val' ? 'COCO_val2014%' : 'COCO_train2014%'
 
@@ -17,7 +27,18 @@ class Picture < ApplicationRecord
       .where('contents.title IN (:classes)', classes: classes)
 
     if with_annotations
-      return picture.joins(:captions).as_json
+      s = {}
+
+      picture.joins(:captions)
+        .select('pictures.name AS picture_name',
+                'captions.caption AS caption')
+        .distinct
+        .each do |r|
+        s[r.picture_name] ||= Array.new
+        s[r.picture_name].push(r.caption)
+      end
+
+      return s
     else
       return picture.distinct
                     .order('pictures.name')
