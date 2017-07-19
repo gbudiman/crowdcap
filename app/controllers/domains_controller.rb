@@ -14,4 +14,12 @@ class DomainsController < ApplicationController
                                         classes: classes, 
                                         with_annotations: true)
   end
+
+  def clustering
+
+  end
+
+  def fetch_cluster
+    render json: Picture.display_clustering
+  end
 end

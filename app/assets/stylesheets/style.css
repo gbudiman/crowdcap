@@ -43,3 +43,15 @@
 #detected-objects {
   font-style: italic;
 }
+
+img.cluster-cell {
+  max-width: 160px;
+  max-height: 160px;
+  vertical-align: middle;
+}
+
+.cluster-group {
+  border: 1px solid #888;
+  border-radius: 4px;
+  margin-top: 4px;
+}

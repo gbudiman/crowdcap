@@ -18,7 +18,7 @@ class Picture < ApplicationRecord
       ActiveRecord::Base.logger = nil
 
       JSON.parse(File.read(io))['images'].each do |s|
-        picture = Picture.find(name: s['file_name'])
+        picture = Picture.find_by(name: s['file_name'])
         picture.coco_internal_id = s['id']
         picture.height = s['height']
         picture.width = s['width']
@@ -35,9 +35,7 @@ class Picture < ApplicationRecord
                        with_annotations: true
 
     File.open(Rails.root.join('public', 'domain_test.json'), 'w') do |f|
-      k.each do |picture_name, ids|
-        f.puts "#{picture_name} #{ids.join(', ')}"
-      end
+      f.write k.to_json
     end
   end
 
@@ -55,25 +53,45 @@ class Picture < ApplicationRecord
     end
 
     if with_annotations
-      s = []
+      annotations = []
+      images = []
+      image_processed = {}
 
       picture.joins(:captions)
         .select('pictures.name AS picture_name',
+                'pictures.coco_internal_id AS picture_internal_id',
+                'pictures.height AS picture_height',
+                'pictures.width AS picture_width',
                 'captions.caption AS sentence',
-                'captions.coco_internal_id AS coco_internal_id')
+                'captions.coco_internal_id AS caption_internal_id')
         .distinct
         .each do |r|
-        matches = /(\d{12,12})/.match(r.picture_name)
-        h = {
-          image_id: matches[1].to_i,
-          id: r.coco_internal_id,
+        #matches = /(\d{12,12})/.match(r.picture_name)
+        annotation = {
+          image_id: r.picture_internal_id, #matches[1].to_i,
+          id: r.caption_internal_id,
           caption: r.sentence
         }
+        annotations.push annotation
 
-        s.push h
+        if image_processed[r.picture_internal_id]
+        else
+          image = {
+            id: r.picture_internal_id,
+            file_name: r.picture_name,
+            height: r.picture_height,
+            width: r.picture_width 
+          }
+
+          images.push image
+          image_processed[r.picture_internal_id] = true
+        end
       end
 
-      return s
+      return {
+        images: images,
+        annotations: annotations
+      }
     else
       return picture.distinct
                     .order('pictures.name')
@@ -204,5 +222,10 @@ class Picture < ApplicationRecord
     end
 
     return nil
+  end
+
+  def self.display_clustering
+    file = File.read(Rails.root.join('lib', 'py', 'output', 'out.json'))
+    return JSON.parse(file)
   end
 end
