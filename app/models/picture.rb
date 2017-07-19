@@ -228,4 +228,20 @@ class Picture < ApplicationRecord
     file = File.read(Rails.root.join('lib', 'py', 'output', 'out.json'))
     return JSON.parse(file)
   end
+
+  def self.make_thumbnails
+    paths = ['/media/b10/gbudiman-coco/coco/images/train2014', '/media/b10/gbudiman-coco/coco/images/val2014']
+    out = Rails.root.join('app', 'assets', 'images')
+
+    paths.each do |path|
+      Dir.glob(Rails.root.join(path, '*.jpg')).tqdm.each do |item|
+        out_path = Rails.root.join(out, "thumb_#{item}")
+        puts "#{File.join(path, item)} -> #{out_path}"
+        image = MiniMagick::Image.open(File.join(path, item)) do |b|
+          b.resize "160x160"
+          b.write out_path
+        end
+      end
+    end
+  end
 end
