@@ -235,12 +235,12 @@ class Picture < ApplicationRecord
 
     paths.each do |path|
       Dir.glob(Rails.root.join(path, '*.jpg')).tqdm.each do |item|
-        out_path = Rails.root.join(out, "thumb_#{item}")
-        puts "#{File.join(path, item)} -> #{out_path}"
-        image = MiniMagick::Image.open(File.join(path, item)) do |b|
-          b.resize "160x160"
-          b.write out_path
-        end
+        filename = item.split('/').last
+        out_path = Rails.root.join(out, "thumb_#{filename}")
+        #puts "#{File.join(path, item)} -> #{out_path}"
+        image = MiniMagick::Image.open(item)
+        image.resize '160x160'
+        image.write out_path
       end
     end
   end
