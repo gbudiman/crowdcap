@@ -24,7 +24,7 @@ def init_data():
   }
 
 def init_algorithm(features):
-  algo = SpectralClustering(8)
+  algo = SpectralClustering(32)
   algo.fit(np.asarray(features))
 
   return algo

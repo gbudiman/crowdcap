@@ -2,6 +2,7 @@ class Picture < ApplicationRecord
   has_many :picture_contents
   has_many :contents, through: :picture_contents
   has_many :captions
+  has_one :composition
 
   def self.generate_caption id
     return Picture.find(id).captions.pluck(:caption).sample
@@ -239,7 +240,7 @@ class Picture < ApplicationRecord
         out_path = Rails.root.join(out, "thumb_#{filename}")
         #puts "#{File.join(path, item)} -> #{out_path}"
         image = MiniMagick::Image.open(item)
-        image.resize '160x160'
+        image.resize '64x64'
         image.write out_path
       end
     end
