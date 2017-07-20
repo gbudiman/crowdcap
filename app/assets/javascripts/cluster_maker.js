@@ -21,7 +21,7 @@ var cluster_maker = function() {
       m +=   '<div class="panel-body">'
       $.each(imgs, function(_junk, img_src) {
         m +=   '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 cluster-cell-container">';
-        m +=     '<img class="cluster-cell" src="/assets/' + img_src.picture_name + '" />';
+        m +=     '<img class="cluster-cell" src="/assets/thumb_' + img_src.picture_name + '" />';
         m +=   '</div>';
       })
       m +=   '</div>';

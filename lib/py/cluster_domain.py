@@ -7,7 +7,7 @@ from db_definition import DBSetup
 
 def init_data():
   db = DBSetup()
-  data = db.get_workable_features()
+  data = db.get_cached_features('val')
   features = []
   serialized = []
 
