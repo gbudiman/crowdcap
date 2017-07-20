@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170720221615) do
+ActiveRecord::Schema.define(version: 20170720233518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,12 +55,14 @@ ActiveRecord::Schema.define(version: 20170720221615) do
   end
 
   create_table "pictures", id: :bigserial, force: :cascade do |t|
-    t.string   "name",             limit: 255,                                                                             null: false
-    t.datetime "created_at",                   precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
-    t.datetime "updated_at",                   precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
+    t.string   "name",                   limit: 255,                                                                             null: false
+    t.datetime "created_at",                         precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
+    t.datetime "updated_at",                         precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
     t.bigint   "coco_internal_id"
     t.integer  "height"
     t.integer  "width"
+    t.bigint   "picture_composition_id"
+    t.index ["picture_composition_id"], name: "index_pictures_on_picture_composition_id", using: :btree
   end
 
   create_table "potentials", id: :bigserial, force: :cascade do |t|
