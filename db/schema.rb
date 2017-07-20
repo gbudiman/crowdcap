@@ -55,14 +55,14 @@ ActiveRecord::Schema.define(version: 20170720233518) do
   end
 
   create_table "pictures", id: :bigserial, force: :cascade do |t|
-    t.string   "name",                   limit: 255,                                                                             null: false
-    t.datetime "created_at",                         precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
-    t.datetime "updated_at",                         precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
+    t.string   "name",             limit: 255,                                                                             null: false
+    t.datetime "created_at",                   precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
+    t.datetime "updated_at",                   precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
     t.bigint   "coco_internal_id"
     t.integer  "height"
     t.integer  "width"
-    t.bigint   "picture_composition_id"
-    t.index ["picture_composition_id"], name: "index_pictures_on_picture_composition_id", using: :btree
+    t.bigint   "composition_id"
+    t.index ["composition_id"], name: "index_pictures_on_composition_id", using: :btree
   end
 
   create_table "potentials", id: :bigserial, force: :cascade do |t|
