@@ -54,4 +54,5 @@ img.cluster-cell {
   border: 1px solid #888;
   border-radius: 4px;
   margin-top: 4px;
+  max-height: 684px;
 }

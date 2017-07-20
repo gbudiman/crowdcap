@@ -35,7 +35,3 @@ var cluster_maker = function() {
     display: display
   }
 }()
-
-$(function() {
-  cluster_maker.display();
-})
