@@ -54,5 +54,9 @@ img.cluster-cell {
   border: 1px solid #888;
   border-radius: 4px;
   margin-top: 4px;
+}
+
+.cluster-group > .panel-body {
   max-height: 684px;
+  overflow-y: auto;
 }
