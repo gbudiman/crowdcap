@@ -59,13 +59,13 @@ class Picture < ApplicationRecord
       images = []
       image_processed = {}
 
-      picture.joins(:captions)
+      picture.joins(:merged_captions)
         .select('pictures.name AS picture_name',
                 'pictures.coco_internal_id AS picture_internal_id',
                 'pictures.height AS picture_height',
                 'pictures.width AS picture_width',
-                'captions.caption AS sentence',
-                'captions.coco_internal_id AS caption_internal_id')
+                'merged_captions.caption AS sentence',
+                'merged_captions.coco_internal_id AS caption_internal_id')
         .distinct
         .each do |r|
         #matches = /(\d{12,12})/.match(r.picture_name)
