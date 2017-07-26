@@ -2,6 +2,7 @@ class Picture < ApplicationRecord
   has_many :picture_contents
   has_many :contents, through: :picture_contents
   has_many :captions
+  has_many :merged_captions
   has_one :composition
 
   def self.generate_caption id

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170726084715) do
+ActiveRecord::Schema.define(version: 20170726092634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,10 +47,11 @@ ActiveRecord::Schema.define(version: 20170726084715) do
   end
 
   create_table "merged_captions", id: :bigserial, force: :cascade do |t|
-    t.text     "caption",    null: false
-    t.bigint   "picture_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.text     "caption",          null: false
+    t.bigint   "picture_id",       null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.bigint   "coco_internal_id"
     t.index ["picture_id"], name: "index_merged_captions_on_picture_id", using: :btree
   end
 
