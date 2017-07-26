@@ -6,14 +6,13 @@ class Composition < ApplicationRecord
 
     ActiveRecord::Base.transaction do
       old_logger = ActiveRecord::Base.logger
-      #ActiveRecord::Base.logger = nil
+      ActiveRecord::Base.logger = nil
 
       pictures = {}
       Picture
         .joins(:contents)
         .select('pictures.id AS picture_id',
                 'contents.id AS content_id')
-        .limit(30)
         .each do |row|
         pictures[row.picture_id] ||= Set.new
         pictures[row.picture_id].add row.content_id
@@ -49,10 +48,30 @@ class Composition < ApplicationRecord
     end
   end
 
+  def self.find_pictures _cs
+    if _cs.is_a?(Hash)
+    elsif _cs.is_a?(Array)
+      content_ids = Content.where(title: _cs).pluck(:id).sort
+    else
+      content_ids = Content.where(title: _cs).pluck(:id).sort
+    end
+
+    Composition
+      .joins(:pictures)
+      .where(contents: to_sql_array(content_ids))
+      .pluck('pictures.id')
+    
+  end
+
+private
+  def self.to_sql_array x
+    return "{#{x.join(',')}}"
+  end
+
   def self.invert_contents
     contents = {}
     Content.all.as_json.each do |d|
-      contents[d['title']] = d['id']
+      contents[d['id']] = d['title']
     end
 
     return contents

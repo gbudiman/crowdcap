@@ -30,14 +30,15 @@ class Picture < ApplicationRecord
     end
   end
 
-  def self.domain_test
-    k = fetch_by_class type: 'train',
+  def self.build_domain type:
+    k = fetch_by_class type: type,
                        classes: ['bicycle','car','traffic light','fire hydrant','motorcycle','stop sign','parking meter','bus','truck'],
                        with_annotations: true
 
-    File.open(Rails.root.join('public', 'domain_test.json'), 'w') do |f|
+    File.open(Rails.root.join('public', "domain_#{type}.json"), 'w') do |f|
       f.write k.to_json
     end
+
   end
 
   def self.fetch_by_class type:, classes:, with_annotations: false
@@ -48,9 +49,9 @@ class Picture < ApplicationRecord
       .joins(:contents)
       .where('pictures.name LIKE :type_pattern', type_pattern: type_pattern)
 
-    if type == ['all']
+    if classes == ['all']
     else
-      picture.where('contents.title IN (:classes)', classes: classes)
+      picture = picture.where('contents.title IN (:classes)', classes: classes)
     end
 
     if with_annotations
