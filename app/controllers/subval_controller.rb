@@ -1,5 +1,6 @@
 class SubvalController < ApplicationController
   def index
+    render 'index'
   end
 
   def post
