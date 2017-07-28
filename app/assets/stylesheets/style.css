@@ -60,3 +60,34 @@ img.cluster-cell {
   max-height: 684px;
   overflow-y: auto;
 }
+
+#img-container {
+  //border: 1px solid red;
+  padding: 8px;
+  vertical-align: middle;
+}
+
+#sentence-a-container, #sentence-b-container {
+  //border: 1px solid blue;
+  padding: 8px;
+
+}
+
+#sentence-a-container {
+  background-color: #fff3e0;
+  border: 1px solid #fff3e0;
+  border-radius: 16px;
+}
+
+#sentence-b-container {
+  background-color: #e1f5fe;
+  border: 1px solid #e1f5f5;
+  border-radius: 16px;
+}
+
+#response-container {
+  //border: 1px solid green;
+  text-align: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}

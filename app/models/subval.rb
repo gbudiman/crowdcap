@@ -1,0 +1,2 @@
+class Subval < ApplicationRecord
+end

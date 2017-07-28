@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170726092634) do
+ActiveRecord::Schema.define(version: 20170726234156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,17 @@ ActiveRecord::Schema.define(version: 20170726092634) do
     t.datetime "created_at", precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
     t.datetime "updated_at", precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
     t.float    "vectors",                                                                                             array: true
+  end
+
+  create_table "gensens", id: :bigserial, force: :cascade do |t|
+    t.bigint   "picture_id", null: false
+    t.integer  "method",     null: false
+    t.string   "sentence",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["method"], name: "index_gensens_on_method", using: :btree
+    t.index ["picture_id", "method"], name: "index_gensens_on_picture_id_and_method", using: :btree
+    t.index ["picture_id"], name: "index_gensens_on_picture_id", using: :btree
   end
 
   create_table "merged_captions", id: :bigserial, force: :cascade do |t|
@@ -84,8 +95,16 @@ ActiveRecord::Schema.define(version: 20170726092634) do
     t.index ["query_id", "target_id"], name: "index_potentials_on_query_id_and_target_id", unique: true, using: :btree
   end
 
+  create_table "subvals", id: :bigserial, force: :cascade do |t|
+    t.bigint   "a_id",       null: false
+    t.bigint   "b_id",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "captions", "pictures"
   add_foreign_key "features", "pictures", name: "features_picture_id_foreign", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "gensens", "pictures"
   add_foreign_key "merged_captions", "pictures"
   add_foreign_key "picture_contents", "contents", name: "picture_contents_content_id_foreign", on_update: :cascade, on_delete: :cascade
   add_foreign_key "picture_contents", "pictures", name: "picture_contents_picture_id_foreign", on_update: :cascade, on_delete: :cascade

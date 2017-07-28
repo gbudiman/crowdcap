@@ -8,6 +8,28 @@ var layout = function() {
     attach_response_triggers();
   }
 
+  var attach_to_subjective_evals = function() {
+    $(window).resize(recalculate_subval_layout);
+    recalculate_subval_layout();
+  }
+
+  var recalculate_subval_layout = function() {
+    var height = $(window).height();
+    var width = $(window).width()
+    var img_height = 0.6 * height;
+    var sentence_height = 0.3 * height;
+    var response_height = 0.1 * height;
+    var button_width = width / 5;
+
+    $('#img-container').css('height', img_height + 'px');
+    $('#sentence-a-container').css('height', sentence_height + 'px');
+    $('#sentence-b-container').css('height', sentence_height + 'px');
+    $('#response_height').css('height', response_height + 'px');
+    $('.btn-resp')
+      .css('height', (response_height - 16) + 'px')
+      .css('width', (button_width - 16) + 'px')
+  }
+
   var attach_response_triggers = function() {
     $('#response-bad').on('click', function() { evals.post('bad') });
     $('#response-good').on('click', function() { evals.post('good') });
@@ -32,6 +54,7 @@ var layout = function() {
 
   return {
     attach: attach,
+    attach_to_subjective_evals: attach_to_subjective_evals,
     enable_response: enable_response,
     recalculate_layout: recalculate_layout
   }

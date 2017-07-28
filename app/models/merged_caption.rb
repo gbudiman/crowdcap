@@ -11,23 +11,23 @@ class MergedCaption < ApplicationRecord
   def self.extract_json io, type
     h = {}
     Picture.all.each do |r|
-      h[r.name] = r.id
+      h[r.coco_internal_id] = r.id
     end
 
     ActiveRecord::Base.transaction do
       old_logger = ActiveRecord::Base.logger
-      ActiveRecord::Base.logger = nil
+      #ActiveRecord::Base.logger = nil
 
-      pretext = "COCO_#{type == :val ? 'val' : 'train'}2014_"
       JSON.parse(File.read(io)).each do |s|
         internal_id = s['id'].to_i
-        coco_id = pretext + sprintf("%012d.jpg", s['image_id'])
-        Caption.create(picture_id: h[coco_id],
-                       caption: s['caption'],
-                       coco_internal_id: internal_id)
+        coco_id = s['image_id']
+
+        MergedCaption.create!(picture_id: h[coco_id],
+                              caption: s['caption'],
+                              coco_internal_id: internal_id)
       end
 
-      ActiveRecord::Base.logger = old_logger
+      #ActiveRecord::Base.logger = old_logger
     end
   end
 end

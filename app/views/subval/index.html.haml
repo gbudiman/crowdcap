@@ -1,0 +1,24 @@
+%div{class: 'container-fluid'}
+  %div{class: 'row'}
+    %div{class: 'col-xs-12 text-center', id: 'img-container'}
+      %img{id: 'img-box'}
+  %div{class: 'row'}
+    %div{class: 'col-xs-6'} 
+      %div{id: 'sentence-a-container'} Sentence A here
+    %div{class: 'col-xs-6'} 
+      %div{id: 'sentence-b-container'} Sentence B here
+  %div{class: 'row'}
+    %div{class: 'col-xs-12', id: 'response-container'}
+      %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-minus-two', 'data-val' => '-2'} -2
+      %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-minus-one', 'data-val' => '-1'} -1
+      %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-neutral', 'data-val' => '0'} 0
+      %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-plus-one', 'data-val' => '1'} 1
+      %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-plus-two', 'data-val' => '2'} 2
+
+= stylesheet_link_tag 'style'
+= javascript_include_tag 'layout/layout'
+= javascript_include_tag 'evals/subvals'
+
+:javascript
+  layout.attach_to_subjective_evals()
+  subvals.attach()
