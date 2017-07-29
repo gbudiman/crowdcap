@@ -1,12 +1,13 @@
 %div{class: 'container-fluid'}
   %div{class: 'row'}
     %div{class: 'col-xs-12 text-center', id: 'img-container'}
-      %img{id: 'img-box'}
+      %img{id: 'img-main', class: 'img-box'}
+      %img{id: 'img-buffered', class: 'img-box'}
   %div{class: 'row'}
     %div{class: 'col-xs-6'} 
-      %div{id: 'sentence-a-container'} Sentence A here
+      %div{id: 'sentence-a-container', class: 'sentence-container'} Sentence A here
     %div{class: 'col-xs-6'} 
-      %div{id: 'sentence-b-container'} Sentence B here
+      %div{id: 'sentence-b-container', class: 'sentence-container'} Sentence B here
   %div{class: 'row'}
     %div{class: 'col-xs-12', id: 'response-container'}
       %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-minus-two', 'data-val' => '-2'} -2
@@ -16,6 +17,7 @@
       %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-plus-two', 'data-val' => '2'} 2
 
 = stylesheet_link_tag 'style'
+= stylesheet_link_tag 'animate'
 = javascript_include_tag 'layout/layout'
 = javascript_include_tag 'evals/subvals'
 

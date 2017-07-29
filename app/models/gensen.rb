@@ -13,8 +13,8 @@ class Gensen < ApplicationRecord
       methods: {}
     }
 
-    Picture
-      .joins(:gensens)
+    Gensen
+      .joins(:picture)
       .limit(1)
       .order('RANDOM()')
       .select('pictures.id AS picture_id', 

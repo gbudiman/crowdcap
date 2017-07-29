@@ -61,16 +61,24 @@ img.cluster-cell {
   overflow-y: auto;
 }
 
+#img-buffered, #img-main {
+  display: none;
+}
+
 #img-container {
   //border: 1px solid red;
   padding: 8px;
-  vertical-align: middle;
+  vertical-align: bottom;
+  float: none;
+  display: inline-block;
 }
 
 #sentence-a-container, #sentence-b-container {
   //border: 1px solid blue;
   padding: 8px;
-
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 #sentence-a-container {
@@ -80,8 +88,8 @@ img.cluster-cell {
 }
 
 #sentence-b-container {
-  background-color: #e1f5fe;
-  border: 1px solid #e1f5f5;
+  background-color: #fff3e0;
+  border: 1px solid #fff3e0;
   border-radius: 16px;
 }
 

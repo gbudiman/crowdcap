@@ -28,6 +28,13 @@ var layout = function() {
     $('.btn-resp')
       .css('height', (response_height - 16) + 'px')
       .css('width', (button_width - 16) + 'px')
+    $('.img-box')
+      .css('max-height', (img_height - 16) + 'px')
+      .css('max-width', (width - 16) + 'px')
+    $('body')
+      .css('overflow-x', 'hidden')
+      .css('overflow-y', 'hidden');
+
   }
 
   var attach_response_triggers = function() {
