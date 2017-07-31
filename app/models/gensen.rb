@@ -59,7 +59,7 @@ class Gensen < ApplicationRecord
       .where('gensens.id != :mid', mid: mask_id)
       .each do |r|
       h[:id] = r.gensen_id
-      h[:sentence] = r.sentence
+      h[:text] = r.sentence
     end
 
     return h
