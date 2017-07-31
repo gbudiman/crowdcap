@@ -12,6 +12,8 @@ class Gensen < ApplicationRecord
       picture: {},
       methods: {}
     }
+    s_picture_id = nil
+    s_gensen_id = nil
 
     Gensen
       .joins(:picture)
@@ -31,12 +33,35 @@ class Gensen < ApplicationRecord
         id: r.gensen_id,
         text: r.sentence
       }
+
+      s_picture_id = r.picture_id
+      s_gensen_id = r.gensen_id
     end
 
-    h[:methods][99] = {
-      id: -1,
-      text: "Randomly generated at #{Time.now}"
-    }
+    #h[:methods][99] = {
+    #  id: -1,
+    #  text: "Randomly generated at #{Time.now}"
+    #}
+
+    h[:methods][99] = Gensen.get_placeholder(picture_id: s_picture_id, mask_id: s_gensen_id)
+    return h
+  end
+
+  def self.get_placeholder picture_id:, mask_id:
+    h = {}
+
+    Gensen
+      .limit(1)
+      .order('RANDOM()')
+      .select('gensens.id AS gensen_id',
+              'gensens.sentence AS sentence')
+      .where('gensens.picture_id = :pid', pid: picture_id)
+      .where('gensens.id != :mid', mid: mask_id)
+      .each do |r|
+      h[:id] = r.gensen_id
+      h[:sentence] = r.sentence
+    end
+
     return h
   end
 
