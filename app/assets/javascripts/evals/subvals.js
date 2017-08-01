@@ -195,6 +195,7 @@ var subvals = function() {
     attach: attach,
     fetch: fetch,
     get_data: function() { return data; },
+    get_state: function() { return state; },
     is_swapped: function() { return data[state].is_swapped; }
   }
 }()
