@@ -1,6 +1,8 @@
 class Subval < ApplicationRecord
   def self.denorm
     h = []
+    score = 0
+    count = 0
 
     Subval
       .joins('INNER JOIN gensens AS g_a ON a_id = g_a.id')
@@ -22,8 +24,15 @@ class Subval < ApplicationRecord
         picture: r.picture_name,
         picture_coco_id: r.picture_coco_id
       })
+
+      count = count + 1
+      score = score + r.score
     end
 
-    return h
+    return {
+      res: h,
+      score: score,
+      count: count
+    }
   end
 end

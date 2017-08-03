@@ -21,6 +21,9 @@ class SubvalController < ApplicationController
   end
 
   def tally
-    @res = Subval.denorm
+    d = Subval.denorm
+    @res = d[:res]
+    @score = d[:score]
+    @count = d[:count]
   end
 end
