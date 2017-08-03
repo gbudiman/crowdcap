@@ -5,6 +5,27 @@ var subvals = function() {
     main:     { id_a: null, id_b: null, s_a: null, s_b: null, is_swapped: false }
   }
 
+  var activate_link = function() {
+    var lsi = $('a.subval-image-link');
+    lsi.each(_activate_link);
+    lsi.on('click', function(event) { event.preventDefault(); });
+  }
+
+  var _activate_link = function() {
+    var path = '/assets/' + $(this).attr('data-path');
+
+    $(this).popover({
+      html: true,
+      content: '<div style="height:160px;width:160px">'
+             +   '<img class="tally-popover" src="' + path + '" />'
+             + '</div>',
+      container: 'body',
+      placement: 'auto',
+      trigger: 'click',
+      viewport: 'body'
+    })
+  }
+
   var attach = function() {
     attach_responses();
     fetch('main').then((res) => {
@@ -30,6 +51,7 @@ var subvals = function() {
       // console.log('state: ' + state);
       // console.log('[' + pdb.id_left + '] ' + pdb.box_left + ' | ' + 
       //             '[' + pdb.id_right + '] ' + pdb.box_right + ' => ' + score);
+      console.log(score);
       $.ajax({
         url: '/subjective/evals/post',
         method: 'POST',
@@ -60,7 +82,7 @@ var subvals = function() {
       switch (val) {
         case -2: text = 'Left sentence is substantially better'; break;
         case -1: text = 'Left sentence is marginally better'; break;
-        case  0: text = 'Both sentence are subjectively equally good'; break;
+        case  0: text = 'Both sentence are subjectively equally good (or bad)'; break;
         case  1: text = 'Right sentence is marginally better'; break;
         case  2: text = 'Right sentence is substantially better'; break;
       }
@@ -128,17 +150,17 @@ var subvals = function() {
     container.is_swapped = Math.round(Math.random()) == 1 ? true : false;
 
     if (container.is_swapped) {
-      container.s_a = res.methods['99'].text;
+      container.s_a = res.methods['1'].text;
       container.s_b = res.methods['0'].text;
 
-      container.id_a = res.methods['99'].id;
+      container.id_a = res.methods['1'].id;
       container.id_b = res.methods['0'].id;
     } else {
       container.s_a = res.methods['0'].text;
-      container.s_b = res.methods['99'].text;
+      container.s_b = res.methods['1'].text;
 
       container.id_a = res.methods['0'].id;
-      container.id_b = res.methods['99'].id;
+      container.id_b = res.methods['1'].id;
     }
 
     if (state == 'main') {
@@ -192,6 +214,7 @@ var subvals = function() {
   }
 
   return {
+    activate_link: activate_link,
     attach: attach,
     fetch: fetch,
     get_data: function() { return data; },

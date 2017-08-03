@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get      '/subjective/evals' , to: 'subval#index'
   get      '/subjective/evals/fetch', to: 'subval#fetch'
   post     '/subjective/evals/post', to: 'subval#post'
+  get      '/subjective/evals/tally', to: 'subval#tally'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

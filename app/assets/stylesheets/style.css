@@ -99,3 +99,12 @@ img.cluster-cell {
   padding-top: 8px;
   padding-bottom: 8px;
 }
+
+.tally-popover {
+  max-height: 160px;
+  max-width: 160px;
+}
+
+.tally-numeric {
+  text-align: right
+}

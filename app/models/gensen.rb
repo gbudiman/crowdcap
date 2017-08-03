@@ -4,7 +4,7 @@ class Gensen < ApplicationRecord
 
   @@gen_method = {
     google: 0,
-    google_plus: 1
+    gdomain: 1
   }
 
   def self.get_random
@@ -12,38 +12,75 @@ class Gensen < ApplicationRecord
       picture: {},
       methods: {}
     }
+    method_container = {}
     s_picture_id = nil
     s_gensen_id = nil
 
-    Gensen
-      .joins(:picture)
-      .limit(1)
-      .order('RANDOM()')
-      .select('pictures.id AS picture_id', 
-              'pictures.name AS picture_name',
-              'gensens.id AS gensen_id',
-              'gensens.method AS method_id',
-              'gensens.sentence AS sentence')
-      .each do |r|
-      h[:picture][:id] ||= r.picture_id
-      h[:picture][:name] ||= r.picture_name
-      method_id = r.method_id
+    # Gensen
+    #   .joins(:picture)
+    #   .limit(1)
+    #   .order('RANDOM()')
+    #   .select('pictures.id AS picture_id', 
+    #           'pictures.name AS picture_name',
+    #           'gensens.id AS gensen_id',
+    #           'gensens.method AS method_id',
+    #           'gensens.sentence AS sentence')
+    #   .where()
+    #   .each do |r|
+    #   h[:picture][:id] ||= r.picture_id
+    #   h[:picture][:name] ||= r.picture_name
+    #   method_id = r.method_id
 
-      h[:methods][method_id] = {
-        id: r.gensen_id,
-        text: r.sentence
+    #   h[:methods][method_id] = {
+    #     id: r.gensen_id,
+    #     text: r.sentence
+    #   }
+
+    #   s_picture_id = r.picture_id
+    #   s_gensen_id = r.gensen_id
+    # end
+
+    raw_sql = 
+      'select pictures.id as picture_id,
+              pictures.name as picture_name,
+              gensens.id AS gensen_id,
+              gensens.method AS method_id,
+              gensens.sentence as sentence
+        from gensens
+        inner join pictures
+          on gensens.picture_id = pictures.id
+        where picture_id = (
+          select picture_id
+            from gensens
+            where method = 1
+            order by random()
+            limit 1
+        )'
+
+    ActiveRecord::Base.connection.execute(raw_sql).each do |r|
+      h[:picture][:id] = r['picture_id']
+      h[:picture][:name] = r['picture_name']
+
+      h_method = r['method_id']
+      method_container[h_method] ||= Hash.new
+      method_container[h_method][r['gensen_id']] = {
+        text: r['sentence'],
+        id: r['gensen_id']
       }
-
-      s_picture_id = r.picture_id
-      s_gensen_id = r.gensen_id
     end
+
+    method_a_sample = method_container[0][method_container[0].keys.sample]
+    method_b_sample = method_container[1][method_container[1].keys.sample]
+
+    h[:methods][0] = method_a_sample
+    h[:methods][1] = method_b_sample
 
     #h[:methods][99] = {
     #  id: -1,
     #  text: "Randomly generated at #{Time.now}"
     #}
 
-    h[:methods][99] = Gensen.get_placeholder(picture_id: s_picture_id, mask_id: s_gensen_id)
+    #h[:methods][99] = Gensen.get_placeholder(picture_id: s_picture_id, mask_id: s_gensen_id)
     return h
   end
 
@@ -88,7 +125,7 @@ class Gensen < ApplicationRecord
       File.readlines(path).each do |_line|
         #puts line
         #line_match = line.match(/(^))
-        line = _line.gsub(/p=.+/, '').gsub("\n", '')
+        line = _line.gsub(/[\(]?p=.+/, '').gsub("\n", '')
         workload[:sentences].push line
       end
     end
