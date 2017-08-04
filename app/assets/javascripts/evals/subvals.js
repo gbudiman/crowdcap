@@ -12,7 +12,7 @@ var subvals = function() {
   }
 
   var _activate_link = function() {
-    var path = '/assets/' + $(this).attr('data-path');
+    var path = '/assets/thumb_' + $(this).attr('data-path');
 
     $(this).popover({
       html: true,

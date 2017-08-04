@@ -57,7 +57,16 @@ class Gensen < ApplicationRecord
             limit 1
         )'
 
-    ActiveRecord::Base.connection.execute(raw_sql).each do |r|
+    #ActiveRecord::Base.connection.execute(raw_sql).each do |r|
+    Gensen
+      .joins(:picture)
+      .where(picture_id: Picture.pick_from_domain.id)
+      .select('pictures.id AS picture_id',
+              'pictures.name AS picture_name',
+              'gensens.id AS gensen_id',
+              'gensens.method AS method_id',
+              'gensens.sentence AS sentence')
+      .each do |r|
       h[:picture][:id] = r['picture_id']
       h[:picture][:name] = r['picture_name']
 

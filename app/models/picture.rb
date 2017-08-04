@@ -6,6 +6,26 @@ class Picture < ApplicationRecord
   has_many :gensens
   has_one :composition
 
+  @@domains = Array.new
+
+  def self.populate_domains
+    j = JSON.parse(File.read(Rails.root.join('public', 'domain_val.json')))
+    images = j['images']
+
+    images.each do |image|
+      @@domains.push(image['id'].to_i)
+    end
+  end
+
+  def self.pick_from_domain
+    if @@domains.length == 0 then Picture.populate_domains end
+    return Picture.find_by(coco_internal_id: @@domains.sample)
+  end
+
+  def self.domain_size
+    return @@domains.length
+  end
+
   def self.generate_caption id
     return Picture.find(id).captions.pluck(:caption).sample
   end
