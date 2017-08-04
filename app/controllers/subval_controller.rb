@@ -11,6 +11,7 @@ class SubvalController < ApplicationController
     if a_id != -1 then s_a = Gensen.find(a_id).sentence end
     if b_id != -1 then s_b = Gensen.find(b_id).sentence end
 
+    ap params
     Subval.create!(a_id: a_id, b_id: b_id, score: score)
 
     render json: { response: true }

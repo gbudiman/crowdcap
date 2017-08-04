@@ -39,25 +39,33 @@ var subvals = function() {
 
   var attach_responses = function() {
     $('.btn-resp').on('click', function() {
-      
       var container = data[flipped_state()];
       var raw_score = parseInt($(this).attr('data-val'));
-      var score = raw_score * (container.is_swapped ? 1 : -1);
+      var score = raw_score * (data[state].is_swapped ? -1 : 1);
       var pdb = pack_debug_info(container);
 
       enable_response_buttons(false);
       give_feedback(true, raw_score);
 
       // console.log('state: ' + state);
-      // console.log('[' + pdb.id_left + '] ' + pdb.box_left + ' | ' + 
-      //             '[' + pdb.id_right + '] ' + pdb.box_right + ' => ' + score);
-      console.log(score);
+      /*console.log('[' + pdb.id_left + '] ' + pdb.box_left + ' | ' + 
+                  '[' + pdb.id_right + '] ' + pdb.box_right + ' => ' + score);
+      if (container.is_swapped) {
+        console.log('Flipped: left: GDomain, right: Google')
+      } else {
+        console.log('Normal : left: Google, right: GDomain')
+      }*/
+      //console.log(score);
       $.ajax({
         url: '/subjective/evals/post',
         method: 'POST',
         data: {
           a_id: container.id_a,
           b_id: container.id_b,
+          /*raw_score: raw_score,
+          left: pdb.box_left,
+          right: pdb.box_right,
+          flipped: data[state].is_swapped,*/
           score: score
         }
       }).done(function() {
@@ -70,6 +78,8 @@ var subvals = function() {
           fetch(state);
         }
         
+        //console.log(data);
+        //console.log('state now is: ' + state);
         enable_response_buttons(true);
       })
     })

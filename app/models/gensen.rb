@@ -66,6 +66,7 @@ class Gensen < ApplicationRecord
               'gensens.id AS gensen_id',
               'gensens.method AS method_id',
               'gensens.sentence AS sentence')
+      .order(:id)
       .each do |r|
       h[:picture][:id] = r['picture_id']
       h[:picture][:name] = r['picture_name']
@@ -78,8 +79,8 @@ class Gensen < ApplicationRecord
       }
     end
 
-    method_a_sample = method_container[0][method_container[0].keys.sample]
-    method_b_sample = method_container[1][method_container[1].keys.sample]
+    method_a_sample = method_container[0][method_container[0].keys()[0]]
+    method_b_sample = method_container[1][method_container[1].keys()[0]]
 
     h[:methods][0] = method_a_sample
     h[:methods][1] = method_b_sample
