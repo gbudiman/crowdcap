@@ -4,14 +4,18 @@
       %th Timestamp
       %th Method: Google Default
       %th Score
+      %th DMOS
+      %th Score
       %th Method: Google with Domain
-      %th Pic (click)
+      %th Pic (hover)
   %tbody
     - @res.each do |r| 
       %tr
         %td= Time.at(r[:timestamped]).in_time_zone('Pacific Time (US & Canada)')
         %td= r[:sentence_a]
-        %td{class: 'tally-numeric'}= r[:score]
+        %td{class: 'tally-numeric'}= r[:score_a]
+        %td{class: 'tally-numeric'}= r[:score_dmos]
+        %td{class: 'tally-numeric'}= r[:score_b]
         %td= r[:sentence_b]
         %td
           %a{class: 'subval-image-link', href: '#', 'data-path' => r[:picture]}= r[:picture_coco_id]
@@ -22,13 +26,21 @@
         %b
           = @count
       %td
+        MOS =
+        %b= sprintf('%.2f', @score_a_sum.to_f/@count.to_f)
       %td{class: 'tally-numeric'}
-        %b= @score
+        %b= @score_a_sum
+      %td{class: 'tally-numeric'}
+        %b= @score_dmos
+      %td{class: 'tally-numeric'}
+        %b= @score_b_sum
       %td
+        MOS =
+        %b= sprintf('%.2f', @score_b_sum.to_f/@count.to_f)
       %td
         DMOS:
         %b
-          = sprintf('%+.2f', @score.to_f/@count.to_f)
+          = sprintf('%+.2f', @score_dmos.to_f/@count.to_f)
 
 = stylesheet_link_tag 'style'
 = javascript_include_tag 'evals/subvals'

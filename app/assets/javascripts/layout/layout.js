@@ -24,6 +24,9 @@ var layout = function() {
     $('#img-container').css('height', img_height + 'px');
     $('#sentence-a-container').css('height', sentence_height + 'px');
     $('#sentence-b-container').css('height', sentence_height + 'px');
+    $('.slider-container').css('height', sentence_height + 'px');
+    $('#mos-a-slider').css('height', (sentence_height - 32) + 'px');
+    $('#mos-b-slider').css('height', (sentence_height - 32) + 'px');
     $('#response_height').css('height', response_height + 'px');
     $('.btn-resp')
       .css('height', (response_height - 16) + 'px')
@@ -34,7 +37,6 @@ var layout = function() {
     $('body')
       .css('overflow-x', 'hidden')
       .css('overflow-y', 'hidden');
-
   }
 
   var attach_response_triggers = function() {

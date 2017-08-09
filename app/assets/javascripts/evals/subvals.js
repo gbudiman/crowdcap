@@ -21,7 +21,7 @@ var subvals = function() {
              + '</div>',
       container: 'body',
       placement: 'auto',
-      trigger: 'click',
+      trigger: 'hover',
       viewport: 'body'
     })
   }

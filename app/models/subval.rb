@@ -1,7 +1,9 @@
 class Subval < ApplicationRecord
   def self.denorm
     h = []
-    score = 0
+    score_a_sum = 0
+    score_b_sum = 0
+    score_dmos = 0
     count = 0
 
     Subval
@@ -12,26 +14,33 @@ class Subval < ApplicationRecord
               'pictures.name AS picture_name',
               'g_a.sentence AS sentence_a',
               'g_b.sentence AS sentence_b',
-              'subvals.score AS score',
-              'subvals.created_at AS timestamped')
+              'subvals.a_score AS a_score',
+              'subvals.b_score AS b_score',
+              'subvals.updated_at AS timestamped')
       .order('created_at' => :desc)
       .each do |r|
       h.push({
         sentence_a: r.sentence_a,
         sentence_b: r.sentence_b,
         timestamped: r.timestamped,
-        score: r.score,
+        score_a: r.a_score,
+        score_b: r.b_score,
+        score_dmos: r.b_score - r.a_score,
         picture: r.picture_name,
         picture_coco_id: r.picture_coco_id
       })
 
       count = count + 1
-      score = score + r.score
+      score_a_sum = score_a_sum + r.a_score
+      score_b_sum = score_b_sum + r.b_score
+      score_dmos = score_dmos + (r.b_score - r.a_score)
     end
 
     return {
       res: h,
-      score: score,
+      score_a_sum: score_a_sum,
+      score_b_sum: score_b_sum,
+      score_dmos: score_dmos,
       count: count
     }
   end
