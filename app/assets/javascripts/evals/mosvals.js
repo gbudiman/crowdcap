@@ -90,8 +90,9 @@ var mosvals = function() {
     var attach_score_modal = function() {
       $('#score-modal').modal({
         show: false
+      }).on('show.bs.modal', function() {
+        $('#num-rated-images').text(gui_position);
       }).on('shown.bs.modal', function() {
-        $('#num-rated-images').text(checkpoint_position);
         hide_slider_tooltip(true);
       }).on('hidden.bs.modal', function() {
         hide_slider_tooltip(false);
@@ -107,9 +108,10 @@ var mosvals = function() {
     var attach_current_result_modal = function() {
       $('#result-modal').modal({
         show: false
+      }).on('show.bs.modal', function() {
+        tabulate_current_result();
       }).on('shown.bs.modal', function() {
         hide_slider_tooltip(true);
-        tabulate_current_result();
       }).on('hidden.bs.modal', function() {
         hide_slider_tooltip(false);
       })
