@@ -123,6 +123,36 @@ img.cluster-cell {
   text-align: right
 }
 
+.tally-header {
+  text-align: center;
+  font-weight: bold;
+  font-size: 125%;
+}
+
+.tally-ldb {
+  text-align: center;
+  font-weight: bold;
+  font-size: 200%;
+}
+
+#table-container {
+  overflow-y: scroll;
+  margin-top: -21px;
+}
+
+#table-denorm {
+  table-layout: fixed;
+}
+
+#table-fake {
+  table-layout: fixed;
+  padding-bottom: 0;
+}
+
+#table-fake > thead > tr > th {
+  text-align: center;
+}
+
 img.img-box {
   vertical-align: top;
 }

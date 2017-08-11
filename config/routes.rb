@@ -11,6 +11,10 @@ Rails.application.routes.draw do
   get      '/subjective/evals/fetch', to: 'subval#fetch'
   post     '/subjective/evals/post', to: 'subval#post'
   get      '/subjective/evals/tally', to: 'subval#tally'
+  get      '/subjective/evals/notif', to: 'subval#notif'
+  get      '/subjective/evals/denorm', to: 'subval#get_tally_denorm'
+
+  mount    ActionCable.server => '/cable'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

@@ -18,4 +18,6 @@ Rails.application.config.assets.precompile += %w( style.css
                                                   animate.css
                                                   evals/*.js
                                                   layout/*.js
-                                                  cluster_maker.js )
+                                                  cluster_maker.js
+                                                  moment.js
+                                                  jquery.sprintf.js )

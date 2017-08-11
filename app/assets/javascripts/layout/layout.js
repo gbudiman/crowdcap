@@ -60,12 +60,23 @@ var layout = function() {
       .css('max-width', viewport_width + 'px');
   }
 
+  var recalculate_tally_layout = function() {
+    var height = $(window).height()
+               - $('#leaderboard').outerHeight()
+               - $('#tooling').outerHeight()
+               - $('#fake-table-header').outerHeight()
+               + 21;
+
+    $('#table-container').css('height', height + 'px');
+  }
+
 
   return {
     attach: attach,
     attach_to_subjective_evals: attach_to_subjective_evals,
     enable_response: enable_response,
-    recalculate_layout: recalculate_layout
+    recalculate_layout: recalculate_layout,
+    recalculate_tally_layout: recalculate_tally_layout
   }
 }()
 

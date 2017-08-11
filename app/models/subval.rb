@@ -1,10 +1,11 @@
 class Subval < ApplicationRecord
-  def self.denorm
+  def self.denorm index_offset: 0
     h = []
-    score_a_sum = 0
-    score_b_sum = 0
-    score_dmos = 0
-    count = 0
+    batch = 25
+    # score_a_sum = 0
+    # score_b_sum = 0
+    # score_dmos = 0
+    # count = 0
 
     Subval
       .joins('INNER JOIN gensens AS g_a ON a_id = g_a.id')
@@ -18,6 +19,8 @@ class Subval < ApplicationRecord
               'subvals.b_score AS b_score',
               'subvals.updated_at AS timestamped')
       .order('created_at' => :desc)
+      .limit(batch)
+      .offset(batch * index_offset)
       .each do |r|
       h.push({
         sentence_a: r.sentence_a,
@@ -30,18 +33,38 @@ class Subval < ApplicationRecord
         picture_coco_id: r.picture_coco_id
       })
 
-      count = count + 1
-      score_a_sum = score_a_sum + r.a_score
-      score_b_sum = score_b_sum + r.b_score
-      score_dmos = score_dmos + (r.b_score - r.a_score)
+      # count = count + 1
+      # score_a_sum = score_a_sum + r.a_score
+      # score_b_sum = score_b_sum + r.b_score
+      # score_dmos = score_dmos + (r.b_score - r.a_score)
     end
 
-    return {
-      res: h,
-      score_a_sum: score_a_sum,
-      score_b_sum: score_b_sum,
-      score_dmos: score_dmos,
-      count: count
-    }
+    # return {
+    #   res: h,
+    #   score_a_sum: score_a_sum,
+    #   score_b_sum: score_b_sum,
+    #   score_dmos: score_dmos,
+    #   count: count
+    # }
+
+    return h
+  end
+
+  def self.get_scores
+    result = {}
+
+    Subval
+      .select('SUM(a_score) AS a_score',
+              'SUM(b_score) AS b_score',
+              'COUNT(*) AS count')
+      .each do |r|
+
+      result[:mos_a] = r.a_score.to_f / r.count.to_f
+      result[:mos_b] = r.b_score.to_f / r.count.to_f
+      result[:dmos] = (r.b_score - r.a_score) / r.count.to_f
+      result[:count] = r.count
+    end
+
+    return result
   end
 end

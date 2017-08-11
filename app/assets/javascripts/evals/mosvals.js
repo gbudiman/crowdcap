@@ -43,7 +43,7 @@ var mosvals = function() {
         min: 1,
         max: 5,
         value: 3,
-        tooltip_position: 'left',
+        tooltip_position: 'right',
         orientation: 'vertical',
         ticks: [5,4,3,2,1],
         formatter: tick_formatter,

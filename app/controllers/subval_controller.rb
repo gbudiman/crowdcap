@@ -29,15 +29,8 @@ class SubvalController < ApplicationController
         id: sv.id
       }
     end
-    # score = params['score'].to_i
 
-    # if a_id != -1 then s_a = Gensen.find(a_id).sentence end
-    # if b_id != -1 then s_b = Gensen.find(b_id).sentence end
-
-    # ap params
-    # Subval.create!(a_id: a_id, b_id: b_id, score: score)
-
-    # render json: { response: true }
+    broadcast
   end
 
   def fetch
@@ -45,11 +38,15 @@ class SubvalController < ApplicationController
   end
 
   def tally
-    d = Subval.denorm
-    @res = d[:res]
-    @score_a_sum = d[:score_a_sum]
-    @score_b_sum = d[:score_b_sum]
-    @score_dmos = d[:score_dmos]
-    @count = d[:count]
+    @stats = Subval.get_scores
+  end
+
+  def get_tally_denorm
+    render json: Subval.denorm(index_offset: (params[:index_offset] || 0).to_i)
+  end
+
+private
+  def broadcast
+    ActionCable.server.broadcast 'valmon_notifications_channel', message: Subval.get_scores
   end
 end

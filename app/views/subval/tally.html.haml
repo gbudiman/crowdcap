@@ -1,49 +1,55 @@
-%table{class: 'table table-striped table-hover'}
-  %thead
-    %tr
-      %th Timestamp
-      %th Method: Google Default
-      %th Score
-      %th DMOS
-      %th Score
-      %th Method: Google with Domain
-      %th Pic (hover)
-  %tbody
-    - @res.each do |r| 
+%div{class: 'container', id: 'leaderboard'}
+  %div{class: 'col-xs-3 tally-header'} Samples
+  %div{class: 'col-xs-3 tally-header'} MOS A
+  %div{class: 'col-xs-3 tally-header'} DMOS
+  %div{class: 'col-xs-3 tally-header'} MOS B
+  %div{class: 'col-xs-3 tally-ldb'}
+    %div{class: 'well well-sm', id: 'tally-count'} 
+      = @stats[:count]
+  %div{class: 'col-xs-3 tally-ldb'}
+    %div{class: 'well well-sm', id: 'tally-mos-a'}
+      = sprintf('%.2f', @stats[:mos_a])
+  %div{class: 'col-xs-3 tally-ldb'}
+    %div{class: 'well well-sm', id: 'tally-dmos'}
+      = sprintf('%+.2f', @stats[:dmos])
+  %div{class: 'col-xs-3 tally-ldb'}
+    %div{class: 'well well-sm', id: 'tally-mos-b'}
+      = sprintf('%.2f', @stats[:mos_b])
+
+%div{class: 'container', id: 'tooling'}
+  %div{class: 'col-xs-12 text-center'}
+    %div{class: 'checkbox'}
+      %label
+        %input{type: 'checkbox', id: 'tally-table-auto-update'} Auto update table
+
+  %div{class: 'col-xs-12 alert alert-warning text-center', id: 'stale-notification', style: 'display: none'}
+    %span{class: 'glyphicon glyphicon-exclamation-sign'}
+    Table is stale.
+    %a{href: '#', id: 'table-refresh'} Refresh
+
+
+%div{class: 'container', id: 'fake-table-header'}
+  %table{class: 'table table-striped table-hover', id: 'table-fake'}
+    %thead
       %tr
-        %td= Time.at(r[:timestamped]).in_time_zone('Pacific Time (US & Canada)')
-        %td= r[:sentence_a]
-        %td{class: 'tally-numeric'}= r[:score_a]
-        %td{class: 'tally-numeric'}= r[:score_dmos]
-        %td{class: 'tally-numeric'}= r[:score_b]
-        %td= r[:sentence_b]
-        %td
-          %a{class: 'subval-image-link', href: '#', 'data-path' => r[:picture]}= r[:picture_coco_id]
-  %tfoot
-    %tr
-      %td
-        Count:
-        %b
-          = @count
-      %td
-        MOS =
-        %b= sprintf('%.2f', @score_a_sum.to_f/@count.to_f)
-      %td{class: 'tally-numeric'}
-        %b= @score_a_sum
-      %td{class: 'tally-numeric'}
-        %b= @score_dmos
-      %td{class: 'tally-numeric'}
-        %b= @score_b_sum
-      %td
-        MOS =
-        %b= sprintf('%.2f', @score_b_sum.to_f/@count.to_f)
-      %td
-        DMOS:
-        %b
-          = sprintf('%+.2f', @score_dmos.to_f/@count.to_f)
+        %th{style: 'width: 20%'} Timestamp
+        %th{style: 'width: 25%'} Method: Google Default
+        %th{style: 'width: 5%'} A
+        %th{style: 'width: 5%'} D
+        %th{style: 'width: 5%'} B
+        %th{style: 'width: 25%'} Method: Google with Domain
+        %th{style: 'width: 15%'} Pic (hover)
+%div{class: 'container', id: 'table-container'}
+  %table{class: 'table table-striped table-hover', id: 'table-denorm'}
+    %tbody
 
 = stylesheet_link_tag 'style'
+= javascript_include_tag 'moment'
 = javascript_include_tag 'evals/subvals'
+= javascript_include_tag 'jquery.sprintf'
 
 :javascript
+  layout.recalculate_tally_layout();
   subvals.activate_link();
+  valmon.attach();
+  valmon.update(null);
