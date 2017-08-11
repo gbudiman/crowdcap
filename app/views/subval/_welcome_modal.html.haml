@@ -1,0 +1,15 @@
+%div{class: 'modal fade', id: 'welcome-modal'}
+  %div{class: 'modal-dialog'}
+    %div{class: 'modal-content'}
+      %div{class: 'modal-header'}
+        %button{type: 'button', class: 'close', 'data-dismiss': 'modal'}
+          %span &times;
+        %h4{class: 'modal-title'} Welcome to Subjective Sentence Generation Evaluation
+      %div{class: 'modal-body'}
+        %p 
+          The purpose of this test is to subjectively evaluate which generated sentence is better. Given an input image, the system will generate two sentences which will be presented in random order. We need your help to rate both sentences relative to each other. Score ranges from 1 (abysmal) to 5 (excellent).
+
+        %p
+          Your responses will be recorded for research purpose to improve the sentence generation algorithm. You can leave the test anytime you want. Responses are automatically saved everytime you advance.
+      %div{class: 'modal-footer'}
+        %button{type: 'button', class: 'btn btn-success pull-right', 'data-dismiss': 'modal'} Begin Test

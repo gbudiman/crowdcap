@@ -1,0 +1,18 @@
+%div{class: 'modal fade', id: 'score-modal'}
+  %div{class: 'modal-dialog'}
+    %div{class: 'modal-content'}
+      %div{class: 'modal-header'}
+        %button{type: 'button', class: 'close', 'data-dismiss': 'modal'}
+          %span &times;
+        %h4{class: 'modal-title'} See Scores
+      %div{class: 'modal-body'}
+        %p
+          So far you have rated
+          %b
+            %span{id: 'num-rated-images'} 0
+          images
+        %p 
+          Seeing your scores will freeze your responses up to but not including current image. Do you still want to see your scores?
+      %div{class: 'modal-footer'}
+        %button{type: 'button', class: 'btn btn-success pull-right', id: 'score-show-result'} Show My Scores
+        %button{type: 'button', class: 'btn btn-default', 'data-dismiss': 'modal', style: 'margin-right:8px'} Cancel

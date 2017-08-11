@@ -27,7 +27,7 @@ var layout = function() {
     $('.slider-container').css('height', sentence_height + 'px');
     $('#mos-a-slider').css('height', (sentence_height - 32) + 'px');
     $('#mos-b-slider').css('height', (sentence_height - 32) + 'px');
-    $('#response_height').css('height', response_height + 'px');
+    $('#response-container').css('height', response_height + 'px');
     $('.btn-resp')
       .css('height', (response_height - 16) + 'px')
       .css('width', (button_width - 16) + 'px')
@@ -37,6 +37,8 @@ var layout = function() {
     $('body')
       .css('overflow-x', 'hidden')
       .css('overflow-y', 'hidden');
+    $('.modal').css('width', width - 16);
+    $('.modal').css('margin', '8px');
   }
 
   var attach_response_triggers = function() {
@@ -70,13 +72,25 @@ var layout = function() {
     $('#table-container').css('height', height + 'px');
   }
 
+  // var recalculate_result_table_layout = function() {
+  //   var modal = $('#result-modal');
+  //   var height = $(window).height()
+  //              - modal.find('.modal-header').height()
+  //              - modal.find('.modal-footer').height()
+  //              - modal.find('#method-info').height();
+
+  //   $('#result-table-container')
+  //     .css('max-height', height + 'px')
+  //     .css('overflow-y', 'auto');
+  // }
+
 
   return {
     attach: attach,
     attach_to_subjective_evals: attach_to_subjective_evals,
     enable_response: enable_response,
     recalculate_layout: recalculate_layout,
-    recalculate_tally_layout: recalculate_tally_layout
+    recalculate_tally_layout: recalculate_tally_layout,
   }
 }()
 

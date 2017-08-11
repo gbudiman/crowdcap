@@ -1,8 +1,10 @@
+= render 'welcome_modal'
+= render 'score_modal'
+= render 'result_modal'
+
 %div{class: 'container-fluid'}
   %div{class: 'row'}
     %div{class: 'col-xs-12 text-center', id: 'img-container'}
-      /%img{id: 'img-main', class: 'img-box'}
-      /%img{id: 'img-buffered', class: 'img-box'}
   %div{class: 'row'}
     %div{class: 'col-xs-5'} 
       %div{id: 'sentence-a-container', class: 'sentence-container'} 
@@ -15,24 +17,23 @@
       %div{id: 'sentence-b-container', class: 'sentence-container'}  
         %div Fetching sentence...
   %div{class: 'row'}
-    %div{class: 'col-xs-6'}
-      %button{type: 'button', class: 'btn btn-lg btn-block btn-primary', id: 'button-prev'} &laquo; Previous
-    %div{class: 'col-xs-6'}
-      %button{type: 'button', class: 'btn btn-lg btn-block btn-primary', id: 'button-next'} Next &raquo;
-    / %div{class: 'col-xs-12', id: 'response-container'}
-    /   %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-minus-two', 'data-val' => '-2'} -2
-    /   %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-minus-one', 'data-val' => '-1'} -1
-    /   %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-neutral', 'data-val' => '0'} 0
-    /   %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-plus-one', 'data-val' => '1'} 1
-    /   %button{type: 'button', class: 'btn btn-primary btn-resp', id: 'resp-plus-two', 'data-val' => '2'} 2
+    %div{id: 'response-container'}
+      %div{class: 'col-xs-2'}
+        %button{type: 'button', class: 'btn btn-lg btn-block btn-success', id: 'button-see-scores'}
+          %span{class: 'glyphicon glyphicon-open'}
+      %div{class: 'col-xs-4'}
+        %button{type: 'button', class: 'btn btn-lg btn-block btn-primary', id: 'button-prev'} &laquo; Previous
+      %div{class: 'col-xs-6'}
+        %button{type: 'button', class: 'btn btn-lg btn-block btn-primary', id: 'button-next'} Next &raquo;
 
 = stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/css/bootstrap-slider.min.css'
 = stylesheet_link_tag 'style'
 = stylesheet_link_tag 'animate'
 = javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/bootstrap-slider.min.js'
 = javascript_include_tag 'layout/layout'
-/= javascript_include_tag 'evals/subvals'
 = javascript_include_tag 'evals/mosvals'
+= javascript_include_tag 'jquery.sprintf'
+%link{href: 'https://fonts.googleapis.com/css?family=Exo+2', rel: 'stylesheet'}
 
 :javascript
   mosvals.attach()

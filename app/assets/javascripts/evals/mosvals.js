@@ -2,9 +2,12 @@ var mosvals = function() {
   var CONST_SLACK = 4;
   var buffers = {};
   var buffer_position = 0;
+  var checkpoint_position = 0;
   var gui_position = -1;
   var slider_a;
   var slider_b;
+  var score_warning_shown = false;
+
   var get_buffer_size = function() {
     return Object.keys(buffers).length;
   }
@@ -64,11 +67,106 @@ var mosvals = function() {
       $('#button-next').on('click', function() {
         switch_gui(1);
       })
+
+      $('#button-see-scores').on('click', function() {
+        if (score_warning_shown) {
+          $('#result-modal').modal('show');       
+        } else {
+          $('#score-modal').modal('show');
+        }
+      })
+    }
+
+    var attach_welcome_modal = function() {
+      $('#welcome-modal').modal({
+      
+      }).on('hidden.bs.modal', function() {
+        hide_slider_tooltip(false);
+      })
+
+      hide_slider_tooltip(true);
+    }
+
+    var attach_score_modal = function() {
+      $('#score-modal').modal({
+        show: false
+      }).on('shown.bs.modal', function() {
+        $('#num-rated-images').text(checkpoint_position);
+        hide_slider_tooltip(true);
+      }).on('hidden.bs.modal', function() {
+        hide_slider_tooltip(false);
+      })
+
+      $('#score-show-result').on('click', function() {
+        $('#score-modal').modal('hide');
+        $('#result-modal').modal('show');
+        score_warning_shown = true;
+      })
+    }
+
+    var attach_current_result_modal = function() {
+      $('#result-modal').modal({
+        show: false
+      }).on('shown.bs.modal', function() {
+        hide_slider_tooltip(true);
+        tabulate_current_result();
+      }).on('hidden.bs.modal', function() {
+        hide_slider_tooltip(false);
+      })
     }
 
     attach_mos_sliders();
     attach_buttons();
+    attach_welcome_modal();
+    attach_score_modal();
+    attach_current_result_modal();
     fetch_buffered();
+  }
+
+  var hide_slider_tooltip = function(val) {
+    if (val) {
+      $('.tooltip-main').removeClass('in')
+    } else {
+      $('.tooltip-main').addClass('in');
+    }
+  }
+
+  var freeze_checkpoint = function() {
+    if (gui_position > checkpoint_position) {
+      checkpoint_position = gui_position;
+    }
+  }
+
+  var tabulate_current_result = function() {
+    var tbody = $('#result-tbody');
+    var count = 0;
+
+    freeze_checkpoint();
+    hide_slider_tooltip(true);
+    tbody.empty();
+    for (var i = 0; i < checkpoint_position; i++) {
+      var d = buffers[i];
+      var s_a = d.is_swapped ? d.s_b : d.s_a;
+      var s_b = d.is_swapped ? d.s_a : d.s_b;
+      var c_a = d.is_swapped ? d.score_b : d.score_a;
+      var c_b = d.is_swapped ? d.score_a : d.score_b;
+
+      var t = '<tr>'
+            +   '<td>' + (++count) + '</td>'
+            +   '<td>' + s_a + '</td>'
+            +   '<td class="tally-numeric">' + c_a + '</td>'
+            +   '<td class="tally-numeric">' + (c_b - c_a) + '</td>'
+            +   '<td class="tally-numeric">' + c_b + '</td>'
+            +   '<td>' + s_b + '</td>'
+            +   '<td>'
+            +     '<img src="/assets/' + d.picture_name + '" '
+            +       'style="max-height:160px;max-width:160px" '
+            +     '/>'
+            +   '</td>'
+            + '</tr>';
+
+      tbody.prepend(t);
+    }
   }
 
   var disable_buttons = function(val) {
@@ -258,6 +356,7 @@ var mosvals = function() {
         .css('position', 'relative')
         .css('top', get_top_amount())
         .css('max-height', ($('#img-container').outerHeight() - 16) + 'px')
+        .css('max-width', ($(window) - 8) + 'px')
 
       obj.addClass(anims.in);
       obj.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
@@ -278,6 +377,14 @@ var mosvals = function() {
 
       slider_a.slider('setValue', d.score_a || 3);
       slider_b.slider('setValue', d.score_b || 3);
+
+      if (checkpoint_position > id) {
+        slider_a.slider('disable');
+        slider_b.slider('disable');
+      } else {
+        slider_a.slider('enable');
+        slider_b.slider('enable');
+      }
     }
 
     disable_buttons(true);
