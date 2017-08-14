@@ -8,7 +8,7 @@ var subvals = function() {
   var activate_link = function() {
     var lsi = $('a.subval-image-link');
     lsi.each(_activate_link);
-    lsi.on('click', function(event) { event.preventDefault(); });
+    lsi.off('click').on('click', function(event) { event.preventDefault(); });
   }
 
   var _activate_link = function() {

@@ -113,6 +113,7 @@ var valmon = function() {
       }, 250);
       mark_stale(false);
       is_at_end();
+      $('.popover').remove();
     })
   }
 
@@ -183,14 +184,16 @@ var valmon = function() {
         if (res.length == 0) {
           end_of_db_records = true;
           console.log('Server responded no more rows');
+        } else {
+
+          var t = make_rows(res);
+
+          var anchor = $('#tally-end');
+          anchor.before(t);
+          is_fetching_more = false;
+          $('#tally-end').find('td').text('End of records');
+          subvals.activate_link();
         }
-
-        var t = make_rows(res);
-
-        var anchor = $('#tally-end');
-        anchor.before(t);
-        is_fetching_more = false;
-        $('#tally-end').find('td').text('End of records');
       }); 
     }, 250)
     
