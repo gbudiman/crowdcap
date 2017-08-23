@@ -7,6 +7,19 @@ class Gensen < ApplicationRecord
     gdomain: 1
   }
 
+  @@color_lut = {
+      "gray" => true,
+    "purple" => true,
+      "pink" => true,
+     "green" => true,
+    "yellow" => true,
+      "blue" => true,
+     "brown" => true,
+       "red" => true,
+     "black" => true,
+     "white" => true,
+  }
+
   def self.get_random
     h = {
       picture: {},
@@ -112,6 +125,9 @@ class Gensen < ApplicationRecord
     return h
   end
 
+  # Most common build commands:
+  # Gensen.build path: 'google_coco_val_2014', mode: :google
+  # Gensen.build path: 'gdomain_val_2014', mode: :gdomain
   def self.build path:, mode:, truncate: false
     workloads = Hash.new
     h_method = @@gen_method[mode]
@@ -151,18 +167,73 @@ class Gensen < ApplicationRecord
       sqls = []
       time_s = Time.now
       workloads.tqdm.each do |coco_picture_id, workload|
-        workload[:sentences].each do |sentence|
-          sqls.push([h[coco_picture_id], h_method, sentence])
+        workload[:sentences].each_with_index do |sentence, i|
+          sqls.push([h[coco_picture_id], h_method, i+1, sentence])
         end
       end
 
-      raw_sql = 'INSERT INTO gensens (picture_id, method, sentence, created_at, updated_at) VALUES '
-      vals = sqls.map{|x| "(#{x[0]}, #{x[1]}, #{Gensen.sanitize(x[2])}, '#{time_s}', '#{time_s}')"}.join(', ')
+      raw_sql = 'INSERT INTO gensens (picture_id, method, confidence_rank, sentence, created_at, updated_at) VALUES '
+      vals = sqls.map{|x| "(#{x[0]}, #{x[1]}, #{x[2]}, #{ActiveRecord::Base.connection.quote(x[3])}, '#{time_s}', '#{time_s}')"}.join(', ')
 
       ActiveRecord::Base.connection.execute(raw_sql + vals)
     end
 
     return Gensen.all.length
+  end
+
+  def self.load_adjectives limit: -1
+    tagger = EngTagger.new
+    adjs = {}
+    dataset = limit == -1 ? Gensen.all : Gensen.all.first(limit)
+    dataset.tqdm.each do |r|
+      tagged = tagger.add_tags(r.sentence)
+      tagger.get_adjectives(tagged).each do |k, v|
+        adjs[k] ||= 0
+        adjs[k] = adjs[k] + v
+      end
+    end
+  end
+
+  def self.remove_color_adjectives limit: -1
+    tagger = EngTagger.new
+    dataset = limit == -1 ? Gensen.all : Gensen.all.first(limit)
+
+    dataset.each do |r|
+      tagged = tagger.add_tags(r.sentence)
+      adjectives = tagger.get_adjectives(tagged)
+      sentence = r.sentence.dup
+      modification_count = 0
+
+      bicolor_match = sentence.match(/(\w+)\s+and\s+(\w+)/)
+
+      if bicolor_match
+        
+        actual_bicolors = bicolor_match.to_a.select do |x| 
+          @@color_lut[x] != nil 
+        end
+
+        if actual_bicolors.length == 2
+          modification_count = 2
+          sentence.gsub!(/#{actual_bicolors[0]}\s+and\s+#{actual_bicolors[1]}/, '')
+        end
+      end
+
+      adjectives.each do |adjective, _junk|
+        if @@color_lut[adjective]
+          modification_count = modification_count + 1
+          sentence.gsub!(adjective, '')
+        end
+      end
+
+      if modification_count > 0
+        puts r.sentence
+        puts " => #{sentence}"
+        #ap adjectives.keys
+        puts '---------'
+      end
+    end
+
+    return true
   end
 
   def self.just_shutup_and

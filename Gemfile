@@ -43,6 +43,7 @@ gem 'rspec-rails'
 gem 'bootstrap-sass'
 gem 'mini_magick'
 gem 'redis'
+gem 'engtagger'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
