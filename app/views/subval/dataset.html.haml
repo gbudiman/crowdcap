@@ -1,0 +1,26 @@
+%table{class: 'table'}
+  %thead
+    %tr
+      %th #
+      %th ID
+      %th Google
+      %th Domain
+  %tbody
+    - @data.each_with_index do |r, i|
+      %tr
+        %td= i+1
+        %td= r['coco_id']
+        %td
+          - if r['google'] == r['google_raw'] or r['google_raw'].length - r['google'].length < 5
+            = r['google']
+          - else
+            = r['google']
+            %br
+            = r['google_raw']
+        %td
+          - if r['domain'] == r['domain_raw'] or r['domain_raw'].length - r['domain'].length < 5
+            = r['domain']
+          - else
+            = r['domain']
+            %br
+            = r['domain_raw']

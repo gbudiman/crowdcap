@@ -8,8 +8,8 @@ class Subval < ApplicationRecord
     # count = 0
 
     Subval
-      .joins('INNER JOIN gensens AS g_a ON a_id = g_a.id')
-      .joins('INNER JOIN gensens AS g_b ON b_id = g_b.id')
+      .joins('INNER JOIN gensen_stagings AS g_a ON a_id = g_a.id')
+      .joins('INNER JOIN gensen_stagings AS g_b ON b_id = g_b.id')
       .joins('INNER JOIN pictures ON g_a.picture_id = pictures.id')
       .select('pictures.coco_internal_id AS picture_coco_id',
               'pictures.name AS picture_name',

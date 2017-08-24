@@ -45,6 +45,11 @@ class SubvalController < ApplicationController
     render json: Subval.denorm(index_offset: (params[:index_offset] || 0).to_i)
   end
 
+  def get_domain_dump
+    @data = CachedDomain.dump_domain(id: params[:id].to_i, rank: (params[:rank] || 1).to_i)
+    render 'subval/dataset'
+  end
+
 private
   def broadcast
     ActionCable.server.broadcast 'valmon_notifications_channel', message: Subval.get_scores

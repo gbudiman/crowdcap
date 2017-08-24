@@ -10,11 +10,14 @@ class Picture < ApplicationRecord
 
   def self.populate_domains
     j = JSON.parse(File.read(Rails.root.join('public', 'domain_val.json')))
-    images = j['images']
+    images = j['images'].map{ |x| x['id'].to_i}
+    in_staging = Picture.where(coco_internal_id: GensenStaging.pluck(:picture_id).uniq).pluck(:coco_internal_id)
 
-    images.each do |image|
-      @@domains.push(image['id'].to_i)
-    end
+    # images.each do |image|
+    #   @@domains.push(image['id'].to_i)
+    # end
+    @@domains = images & in_staging
+    return Picture.domain_size
   end
 
   def self.pick_from_domain

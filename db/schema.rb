@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170822232835) do
+ActiveRecord::Schema.define(version: 20170824013730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cached_domains", force: :cascade do |t|
+    t.integer "domain_id", null: false
+    t.bigint "picture_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain_id"], name: "index_cached_domains_on_domain_id"
+    t.index ["picture_id"], name: "index_cached_domains_on_picture_id"
+  end
 
   create_table "captions", force: :cascade do |t|
     t.text "caption", null: false
@@ -44,6 +53,18 @@ ActiveRecord::Schema.define(version: 20170822232835) do
     t.datetime "created_at", precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
     t.datetime "updated_at", precision: 6, default: -> { "('now'::text)::timestamp(6) with time zone" }, null: false
     t.float "vectors", array: true
+  end
+
+  create_table "gensen_stagings", force: :cascade do |t|
+    t.bigint "picture_id", null: false
+    t.integer "method", null: false
+    t.integer "confidence_rank", default: 1, null: false
+    t.string "sentence", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["method"], name: "index_gensen_stagings_on_method"
+    t.index ["picture_id", "method"], name: "index_gensen_stagings_on_picture_id_and_method"
+    t.index ["picture_id"], name: "index_gensen_stagings_on_picture_id"
   end
 
   create_table "gensens", force: :cascade do |t|
@@ -107,6 +128,7 @@ ActiveRecord::Schema.define(version: 20170822232835) do
 
   add_foreign_key "captions", "pictures"
   add_foreign_key "features", "pictures", name: "features_picture_id_foreign", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "gensen_stagings", "pictures"
   add_foreign_key "gensens", "pictures"
   add_foreign_key "merged_captions", "pictures"
   add_foreign_key "picture_contents", "contents", name: "picture_contents_content_id_foreign", on_update: :cascade, on_delete: :cascade

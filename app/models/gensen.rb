@@ -29,56 +29,14 @@ class Gensen < ApplicationRecord
     s_picture_id = nil
     s_gensen_id = nil
 
-    # Gensen
-    #   .joins(:picture)
-    #   .limit(1)
-    #   .order('RANDOM()')
-    #   .select('pictures.id AS picture_id', 
-    #           'pictures.name AS picture_name',
-    #           'gensens.id AS gensen_id',
-    #           'gensens.method AS method_id',
-    #           'gensens.sentence AS sentence')
-    #   .where()
-    #   .each do |r|
-    #   h[:picture][:id] ||= r.picture_id
-    #   h[:picture][:name] ||= r.picture_name
-    #   method_id = r.method_id
-
-    #   h[:methods][method_id] = {
-    #     id: r.gensen_id,
-    #     text: r.sentence
-    #   }
-
-    #   s_picture_id = r.picture_id
-    #   s_gensen_id = r.gensen_id
-    # end
-
-    raw_sql = 
-      'select pictures.id as picture_id,
-              pictures.name as picture_name,
-              gensens.id AS gensen_id,
-              gensens.method AS method_id,
-              gensens.sentence as sentence
-        from gensens
-        inner join pictures
-          on gensens.picture_id = pictures.id
-        where picture_id = (
-          select picture_id
-            from gensens
-            where method = 1
-            order by random()
-            limit 1
-        )'
-
-    #ActiveRecord::Base.connection.execute(raw_sql).each do |r|
-    Gensen
+    GensenStaging
       .joins(:picture)
-      .where(picture_id: Picture.pick_from_domain.id)
+      .where(picture_id: CachedDomain.pick_random(id: 0, rank: 1).picture_id)
       .select('pictures.id AS picture_id',
               'pictures.name AS picture_name',
-              'gensens.id AS gensen_id',
-              'gensens.method AS method_id',
-              'gensens.sentence AS sentence')
+              'gensen_stagings.id AS gensen_id',
+              'gensen_stagings.method AS method_id',
+              'gensen_stagings.sentence AS sentence')
       .order(:id)
       .each do |r|
       h[:picture][:id] = r['picture_id']
@@ -196,9 +154,11 @@ class Gensen < ApplicationRecord
 
   def self.remove_color_adjectives limit: -1
     tagger = EngTagger.new
-    dataset = limit == -1 ? Gensen.all : Gensen.all.first(limit)
+    prefilter = Gensen.all
+    dataset = limit == -1 ? prefilter : prefilter.first(limit)
+    staging = {}
 
-    dataset.each do |r|
+    dataset.tqdm.each do |r|
       tagged = tagger.add_tags(r.sentence)
       adjectives = tagger.get_adjectives(tagged)
       sentence = r.sentence.dup
@@ -225,15 +185,19 @@ class Gensen < ApplicationRecord
         end
       end
 
-      if modification_count > 0
-        puts r.sentence
-        puts " => #{sentence}"
-        #ap adjectives.keys
-        puts '---------'
-      end
+      staging[r.picture_id] ||= {
+        0 => {},
+        1 => {}
+      }
+
+      staging[r.picture_id][r.method][r.confidence_rank] = retain_only_words(sentence)
     end
 
-    return true
+    return staging
+  end
+
+  def self.retain_only_words x
+    return x.gsub(/[^\w\s\d]+/, '').gsub(/\s+/, ' ').strip
   end
 
   def self.just_shutup_and

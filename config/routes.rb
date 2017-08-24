@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get      '/subjective/evals/tally', to: 'subval#tally'
   get      '/subjective/evals/notif', to: 'subval#notif'
   get      '/subjective/evals/denorm', to: 'subval#get_tally_denorm'
+  get      '/subjective/evals/dataset/:id', to: 'subval#get_domain_dump'
+  get      '/subjective/evals/dataset/:id/:rank', to: 'subval#get_domain_dump'
 
   mount    ActionCable.server => '/cable'
 
