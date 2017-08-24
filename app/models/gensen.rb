@@ -35,6 +35,24 @@ class Gensen < ApplicationRecord
     kids: 'people'
   }
 
+  def self.get_dataset
+    h = {}
+
+    GensenStaging
+      .joins(:picture)
+      .where(picture_id: CachedDomain.get_dataset(id: 0, rank: 1).pluck(:picture_id))
+      .select('pictures.coco_internal_id AS coco_id',
+              'gensen_stagings.method AS method_id',
+              'gensen_stagings.sentence AS sentence')
+      .order(:id)
+      .each do |r|
+      h[r[:coco_id]] ||= {}
+      h[r[:coco_id]][r[:method_id]] = r.sentence
+    end
+
+    return h
+  end
+
   def self.get_random
     h = {
       picture: {},

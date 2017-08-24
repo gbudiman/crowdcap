@@ -8,6 +8,10 @@ class CachedDomain < ApplicationRecord
                        .first
   end
 
+  def self.get_dataset id:, rank:
+    return CachedDomain.get_cached(id: id, rank: rank)
+  end
+
   def self.dump_domain id:, rank:
     conn = ActiveRecord::Base.connection
 

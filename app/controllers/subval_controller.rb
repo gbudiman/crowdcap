@@ -39,6 +39,11 @@ class SubvalController < ApplicationController
     render json: Gensen.get_random
   end
 
+  def fetch_all
+    @data = Gensen.get_dataset
+    render 'subval/dataset_fetch'
+  end
+
   def tally
     @stats = Subval.get_scores
   end
