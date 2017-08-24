@@ -59,10 +59,14 @@ class Subval < ApplicationRecord
               'COUNT(*) AS count')
       .each do |r|
 
-      result[:mos_a] = r.a_score.to_f / r.count.to_f
-      result[:mos_b] = r.b_score.to_f / r.count.to_f
-      result[:dmos] = (r.b_score - r.a_score) / r.count.to_f
-      result[:count] = r.count
+      a_score = (r.a_score || 0).to_f
+      b_score = (r.b_score || 0).to_f
+      count = (r.count || 0).to_f
+      diff = b_score - a_score
+      result[:mos_a] = a_score == 0 ? 0 : a_score / count
+      result[:mos_b] = b_score == 0 ? 0 : b_score / count
+      result[:dmos] = diff == 0 ? 0 : diff / count
+      result[:count] = count
     end
 
     return result
