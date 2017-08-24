@@ -1,4 +1,6 @@
 class SubvalController < ApplicationController
+  include DatasetHelper
+
   def index
     render 'index'
   end
@@ -46,6 +48,7 @@ class SubvalController < ApplicationController
   end
 
   def get_domain_dump
+
     @data = CachedDomain.dump_domain(id: params[:id].to_i, rank: (params[:rank] || 1).to_i)
     render 'subval/dataset'
   end

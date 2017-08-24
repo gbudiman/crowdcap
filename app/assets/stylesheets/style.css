@@ -177,3 +177,8 @@ img.cluster-cell {
 img.img-box {
   vertical-align: top;
 }
+
+span.replaced {
+  color: #aaa;
+  font-style: italic
+}

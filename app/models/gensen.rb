@@ -20,6 +20,21 @@ class Gensen < ApplicationRecord
      "white" => true,
   }
 
+  @@object_lut = {
+    woman: 'person',
+    women: 'people',
+    man: 'person',
+    men: 'people',
+    girl: 'person',
+    girls: 'people',
+    boy: 'person',
+    boys: 'people',
+    children: 'people',
+    child: 'person',
+    kid: 'person',
+    kids: 'people'
+  }
+
   def self.get_random
     h = {
       picture: {},
@@ -161,6 +176,7 @@ class Gensen < ApplicationRecord
     dataset.tqdm.each do |r|
       tagged = tagger.add_tags(r.sentence)
       adjectives = tagger.get_adjectives(tagged)
+      nouns = tagger.get_nouns(tagged)
       sentence = r.sentence.dup
       modification_count = 0
 
@@ -185,10 +201,25 @@ class Gensen < ApplicationRecord
         end
       end
 
+      nouns.each do |_noun, _junk|
+        noun = _noun.downcase.to_sym
+        object_modification = @@object_lut[noun]
+        if object_modification
+          modification_count = modification_count + 1
+          sentence.gsub!(_noun, object_modification)
+        end
+      end
+
       staging[r.picture_id] ||= {
         0 => {},
         1 => {}
       }
+
+      # if (modification_count > 0)
+      #   ap r.sentence
+      #   ap " ==> #{sentence}"
+      #   ap '---'
+      # end
 
       staging[r.picture_id][r.method][r.confidence_rank] = retain_only_words(sentence)
     end
