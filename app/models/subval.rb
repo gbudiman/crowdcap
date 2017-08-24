@@ -61,11 +61,11 @@ class Subval < ApplicationRecord
 
       a_score = (r.a_score || 0).to_f
       b_score = (r.b_score || 0).to_f
-      count = (r.count || 0).to_f
+      count = (r.count || 0).to_i
       diff = b_score - a_score
-      result[:mos_a] = a_score == 0 ? 0 : a_score / count
-      result[:mos_b] = b_score == 0 ? 0 : b_score / count
-      result[:dmos] = diff == 0 ? 0 : diff / count
+      result[:mos_a] = a_score == 0 ? 0 : a_score / count.to_f
+      result[:mos_b] = b_score == 0 ? 0 : b_score / count.to_f
+      result[:dmos] = diff == 0 ? 0 : diff / count.to_f
       result[:count] = count
     end
 
