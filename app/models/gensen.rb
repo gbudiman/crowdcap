@@ -224,7 +224,7 @@ class Gensen < ApplicationRecord
         object_modification = @@object_lut[noun]
         if object_modification
           modification_count = modification_count + 1
-          sentence.gsub!(_noun, object_modification)
+          sentence.gsub!(/\b#{_noun}\b/, object_modification)
         end
       end
 
