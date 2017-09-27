@@ -7,6 +7,7 @@ var mosvals = function() {
   var slider_a;
   var slider_b;
   var score_warning_shown = false;
+  var enable_double_blind = true;
 
   var get_buffer_size = function() {
     return Object.keys(buffers).length;
@@ -117,11 +118,18 @@ var mosvals = function() {
       })
     }
 
+    var attach_double_blind = function() {
+      if (enable_double_blind) {
+        $('.double-blind-title').hide()
+      }
+    }
+
     attach_mos_sliders();
     attach_buttons();
     attach_welcome_modal();
     attach_score_modal();
     attach_current_result_modal();
+    attach_double_blind();
     fetch_buffered();
   }
 
@@ -196,7 +204,7 @@ var mosvals = function() {
     }
 
     var load_to_buffer = function(id, d) {
-      var is_swapped = Math.round(Math.random()) == 1 ? true : false
+      var is_swapped = enable_double_blind ? (Math.round(Math.random()) == 1 ? true : false) : false;
       var s_a;
       var s_b;
       var id_a;

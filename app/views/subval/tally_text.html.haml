@@ -1,0 +1,6 @@
+%div{class: 'container'}
+  = ['Sentence A', 'Sentence B', 'Timestamp', 'MOS A', 'DMOS', 'MOS B', 'Picture Path', 'COCO ID'].join(', ')
+  %br
+  - @data.each do |r|
+    = r.values.join(', ')
+    %br

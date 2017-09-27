@@ -1,0 +1,20 @@
+%table{class: 'table'}
+  %thead
+    %tr
+      %th #
+      %th ID
+      %th Google
+      %th Ours
+      %th Image
+  %tbody
+    - @data.each_with_index do |(coco_id, d), i|
+
+      %tr
+        %td= i+1
+        %td= coco_id
+        %td= d[0]
+        %td= d[1]
+        %td
+          %img{src: "/assets/#{d[:path]}", class: 'tally-popover'}
+
+= stylesheet_link_tag 'style'

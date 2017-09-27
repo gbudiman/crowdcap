@@ -1,7 +1,7 @@
 class Subval < ApplicationRecord
-  def self.denorm index_offset: 0
+  def self.denorm index_offset: 0, batch_size: 25
     h = []
-    batch = 25
+    batch = batch_size == -1 ? Subval.count : batch_size
     # score_a_sum = 0
     # score_b_sum = 0
     # score_dmos = 0

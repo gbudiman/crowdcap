@@ -42,12 +42,14 @@ class Gensen < ApplicationRecord
       .joins(:picture)
       .where(picture_id: CachedDomain.get_dataset(id: 0, rank: 1).pluck(:picture_id))
       .select('pictures.coco_internal_id AS coco_id',
+              'pictures.name AS picture_name',
               'gensen_stagings.method AS method_id',
               'gensen_stagings.sentence AS sentence')
       .order(:id)
       .each do |r|
       h[r[:coco_id]] ||= {}
       h[r[:coco_id]][r[:method_id]] = r.sentence
+      h[r[:coco_id]][:path] = r.picture_name
     end
 
     return h

@@ -48,6 +48,10 @@ class SubvalController < ApplicationController
     @stats = Subval.get_scores
   end
 
+  def tally_text
+    @data = Subval.denorm batch_size: -1
+  end
+
   def get_tally_denorm
     render json: Subval.denorm(index_offset: (params[:index_offset] || 0).to_i)
   end
