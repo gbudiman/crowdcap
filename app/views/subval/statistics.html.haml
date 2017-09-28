@@ -1,0 +1,36 @@
+%table{class: 'table', id: 'stat-table'}
+  %thead
+    %tr
+      %th COCO ID
+      %th Image (Hover to zoom)
+      %th Count
+      %th Google's
+      %th Ours
+      %th{id: 'mos-a-header', class: 'stat-header'} MOS A
+      %th{id: 'dmos-header', class: 'stat-header'} DMOS
+      %th{id: 'mos-b-header', class: 'stat-header'} MOS B
+  %tbody
+    - @data.each do |d|
+      %tr
+        %td= d['coco_id']
+        %td
+          %img{src: "/assets/#{d['path']}", class: 'cluster-cell'}
+        %td= d['eval_count']
+        %td= d['sentence_a']
+        %td= d['sentence_b']
+        %td
+          %div{'data-val': d['min_a'], class: 'stats-bar stats-min'}= sprintf('%.0f', d['min_a'])
+          %div{'data-val': d['avg_a'], class: 'stats-bar stats-avg'}= sprintf('%.2f', d['avg_a'])
+          %div{'data-val': d['max_a'], class: 'stats-bar stats-max'}= sprintf('%.0f', d['max_a'])
+        %td
+          %div{'data-val': d['min_dmos'], class: 'stats-dmos stats-min'}= sprintf('%.0f', d['min_dmos'])
+          %div{'data-val': d['avg_dmos'], class: 'stats-dmos stats-avg'}= sprintf('%.2f', d['avg_dmos'])
+          %div{'data-val': d['max_dmos'], class: 'stats-dmos stats-max'}= sprintf('%.0f', d['max_dmos'])
+        %td
+          %div{'data-val': d['min_b'], class: 'stats-bar stats-min'}= sprintf('%.0f', d['min_b'])
+          %div{'data-val': d['avg_b'], class: 'stats-bar stats-avg'}= sprintf('%.2f', d['avg_b'])
+          %div{'data-val': d['max_b'], class: 'stats-bar stats-max'}= sprintf('%.0f', d['max_b'])
+
+= stylesheet_link_tag 'style'
+= javascript_include_tag 'evals/statistics'
+%link{href: 'https://fonts.googleapis.com/css?family=Exo+2', rel: 'stylesheet'}

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get      '/subjective/evals/tally_text', to: 'subval#tally_text'
   get      '/subjective/evals/notif', to: 'subval#notif'
   get      '/subjective/evals/denorm', to: 'subval#get_tally_denorm'
+  get      '/subjective/evals/statistics', to: 'subval#statistics'
   get      '/subjective/evals/dataset/:id', to: 'subval#get_domain_dump'
   get      '/subjective/evals/dataset/:id/:rank', to: 'subval#get_domain_dump'
   get      '/subjective/evals/fetch_all', to: 'subval#fetch_all'

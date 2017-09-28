@@ -62,6 +62,10 @@ class SubvalController < ApplicationController
     render 'subval/dataset'
   end
 
+  def statistics
+    @data = Subval.get_stats
+  end
+
 private
   def broadcast
     ActionCable.server.broadcast 'valmon_notifications_channel', message: Subval.get_scores

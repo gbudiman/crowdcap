@@ -71,4 +71,46 @@ class Subval < ApplicationRecord
 
     return result
   end
+
+  def self.get_stats
+    result = Array.new
+
+    sql = 'select distinct g.coco_id as coco_id,
+           g.path as path,
+           count(g.a_score) over (partition by g.coco_id) as eval_count,
+           min(g.a_score) over (partition by g.coco_id) as min_a,
+           avg(g.a_score) over (partition by g.coco_id) as avg_a,
+           max(g.a_score) over (partition by g.coco_id) as max_a,
+           min(g.b_score) over (partition by g.coco_id) as min_b,
+           avg(g.b_score) over (partition by g.coco_id) as avg_b,
+           max(g.b_score) over (partition by g.coco_id) as max_b,
+           min(g.dmos) over (partition by g.coco_id) as min_dmos,
+           avg(g.dmos) over (partition by g.coco_id) as avg_dmos,
+           max(g.dmos) over (partition by g.coco_id) as max_dmos,
+           g.sentence_a as sentence_a,
+           g.sentence_b as sentence_b
+           from (
+             select g_a.sentence as sentence_a,
+                    g_b.sentence as sentence_b,
+                    subvals.a_score as a_score,
+                    subvals.b_score as b_score,
+                    subvals.b_score - subvals.a_score as dmos,
+                    pictures.name as path,
+                    pictures.coco_internal_id as coco_id
+             from subvals
+             inner join gensen_stagings as g_a
+               on subvals.a_id = g_a.id
+             inner join gensen_stagings as g_b
+               on subvals.b_id = g_b.id 
+             inner join pictures
+               on g_a.picture_id = pictures.id
+           ) as g
+           order by coco_id'
+
+    ActiveRecord::Base.connection.execute(sql).each do |r|
+      result.push r
+    end
+
+    return result
+  end
 end

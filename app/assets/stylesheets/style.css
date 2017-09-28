@@ -139,6 +139,24 @@ img.cluster-cell {
   font-size: 200%;
 }
 
+.stats-bar, .stats-dmos {
+  height: 16px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.stats-min {
+  background-color: #FC4F00;
+}
+
+.stats-avg {
+  background-color: #6AE100;
+}
+
+.stats-max {
+  background-color: #5FA0E4;
+}
+
 #table-container {
   overflow-y: scroll;
   margin-top: -21px;
